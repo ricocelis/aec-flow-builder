@@ -1,6 +1,14 @@
 <template>
 	<div class="flow-builder">
-		<div class="flow"></div>
+		<!-- flow builder -->
+		<div class="flow">
+			<div class="flow-name">{{ flowName }}</div>
+			<div class="flow-sections">
+				<FlowSection />
+				<FlowSection />
+			</div>
+		</div>
+		<!-- processes and flows to drag -->
 		<div class="processes">
 			<div class="tabs-and-search">
 				<div class="tabs">
@@ -23,6 +31,7 @@
 			</div>
 			<div class="flows-list" v-show="isActiveTab('flows')">
 				<h2>Flows</h2>
+
 			</div>
 		</div>
 	</div>
@@ -30,11 +39,13 @@
 
 <script>
 	import ProcessRow from '@/components/ProcessRow.vue';
+	import FlowSection from '@/components/FlowSection.vue';
 	import {mapState} from 'vuex';
 	export default {
 		name: "flow-builder",
 		components: {
-			ProcessRow
+			ProcessRow,
+			FlowSection
 		},
 		data(){
 			return {
@@ -71,6 +82,9 @@
 
 		},
 		computed: {
+			flowName(){
+				return "Payroll Flow";
+			},
 			...mapState({
 				processes : state => state.filtered_processes,
 				process_object: state => state.process_object
