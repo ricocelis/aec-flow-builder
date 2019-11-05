@@ -4,8 +4,12 @@
 		<div class="flow">
 			<div class="flow-name">{{ flowName }}</div>
 			<div class="flow-sections">
-				<FlowSection />
-				<FlowSection />
+				<FlowSection
+					v-for="(section,index) in flow_sections"
+					:key="index"
+					:section="section"
+					:index="index" />
+				<div class="add-section" @click.prevent="addSection"><i class="fas fa-plus"></i></div>
 			</div>
 		</div>
 		<!-- processes and flows to drag -->
@@ -31,7 +35,6 @@
 			</div>
 			<div class="flows-list" v-show="isActiveTab('flows')">
 				<h2>Flows</h2>
-
 			</div>
 		</div>
 	</div>
@@ -45,7 +48,7 @@
 		name: "flow-builder",
 		components: {
 			ProcessRow,
-			FlowSection
+			FlowSection,
 		},
 		data(){
 			return {
@@ -78,6 +81,9 @@
 			},
 			isActiveTab(tab){
 				return (tab == this.active_tab);
+			},
+			addSection(){
+				this.$store.commit('addFlowSection');
 			}
 
 		},
@@ -87,7 +93,8 @@
 			},
 			...mapState({
 				processes : state => state.filtered_processes,
-				process_object: state => state.process_object
+				process_object: state => state.process_object,
+				flow_sections: state => state.flow_sections
 			})
 		},
 		watch: {

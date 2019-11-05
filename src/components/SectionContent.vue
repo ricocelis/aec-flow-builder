@@ -2,15 +2,53 @@
 	<div class="section-content-row">
 		<div class="arrow"></div>
 		<div class="content">
-			<div class="process-number">100.2.1</div>
-			<div class="process-name">Access Payroll System</div>
-			<div class="delete"><i class="far fa-trash-alt"></i></div>
+			<div class="process-number" v-if="this.content.type == 'process'">100.2.1</div>
+			<div class="process-name">{{ contentName }}</div>
+			<div class="delete" @click.prevent="deleteContent"><i class="far fa-trash-alt"></i></div>
+			<input type="hidden" :name="typeFieldName" :value="content.type" />
+			<input type="hidden" :name="foreignKeyFieldName" :value="foreignKey" />
 		</div>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: "section-content"
+		name: "section-content",
+		props: {
+			content: {
+				type: Object,
+				default: () => {}
+			},
+			section_index: {
+				type: Number,
+				default: 0
+			},
+			index: {
+				type: Number,
+				default: 0
+			}
+		},
+		methods: {
+			deleteContent(){
+				this.$store.commit('deleteSectionContent',{
+					section_index: this.section_index,
+					index: this.section_index
+				});
+			}
+		},
+		computed: {
+			contentName(){
+				return (this.content.type == "process")? this.content.data.ClientProcess.name : "";
+			},
+			typeFieldName(){
+				return `sections[${this.section_index}][content][${this.index}].type`;
+			},
+			foreignKeyFieldName(){
+				return `sections[${this.section_index}][content][${this.index}].foreign_key`;
+			},
+			foreignKey(){
+				return (this.content.type == "process")? this.content.data.ClientProcess.id : "";
+			}
+		}
 	}
 </script>

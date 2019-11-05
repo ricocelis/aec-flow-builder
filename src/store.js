@@ -8,7 +8,11 @@ export default new Vuex.Store({
 	state: {
 		processes: [],
 		process_object: {},
-		filtered_processes: []
+		filtered_processes: [],
+		draggable_process : {},
+		flow_sections: [
+			{ name: '', content: [] }
+		]
 	},
 	mutations: {
 		setProcesses(state,payload){
@@ -28,6 +32,22 @@ export default new Vuex.Store({
 				}
 				state.filtered_processes = _.cloneDeep(data);
 			}
+		},
+		setDraggableProcess(state,payload){
+			state.draggable_process = payload;
+		},
+		addContentToSection(state,payload){
+			if(payload.location == "start"){
+				state.flow_sections[payload.index].content.unshift(payload.data);
+			}else{
+				state.flow_sections[payload.index].content.push(payload.data);
+			}
+		},
+		deleteSectionContent(state,payload){
+			state.flow_sections[payload.section_index].content.splice(payload.index, 1);
+		},
+		addFlowSection(state){
+			state.flow_sections.push({ name: '', content: [] });
 		}
 	}
 });
