@@ -11,7 +11,7 @@
 				</div>
 				<div class="search">
 					<i class="fas fa-search"></i>
-					<input type="text" class="search-box" placeholder="Search">
+					<input type="text" class="search-box" placeholder="Search" v-model="term">
 				</div>
 			</div>
 			<div class="process-list" v-show="isActiveTab('processes')">
@@ -38,7 +38,8 @@
 		},
 		data(){
 			return {
-				active_tab: "processes"
+				active_tab: "processes",
+				term: "",
 			}
 		},
 		mounted(){
@@ -71,9 +72,14 @@
 		},
 		computed: {
 			...mapState({
-				processes : state => state.processes,
+				processes : state => state.filtered_processes,
 				process_object: state => state.process_object
 			})
+		},
+		watch: {
+			term(){
+				this.$store.commit("setFilterProcesses",this.term);
+			},
 		}
 	}
 </script>

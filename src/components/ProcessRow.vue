@@ -1,5 +1,5 @@
 <template>
-	<div class="process-row noselect">
+	<div class="process-row noselect" :class="matchedClass">
 		<div class="process-info">
 			<span class="process-number">{{ processNumber }}</span> <span class="process-name"> {{ processName }}</span>
 			<i class="fas fa-expand-arrows-alt"></i>
@@ -52,6 +52,11 @@
 			},
 			processName(){
 				return this.row_data.ClientProcess.name;	
+			},
+			// check if it has a search result match
+			matchedClass(){
+				if(this.row_data.name_match == undefined) return "";
+				return (this.row_data.name_match || this.row_data.tag_match)? "matched" : "not-matched";
 			}
 		}
 	}
