@@ -2,7 +2,7 @@
 	<div class="section-content-row">
 		<div class="arrow"></div>
 		<div class="content">
-			<div class="process-number" v-if="this.content.type == 'process'">100.2.1</div>
+			<div class="process-number" v-if="this.content.type == 'process'">{{ processNumber }}</div>
 			<div class="process-name">{{ contentName }}</div>
 			<div class="delete" @click.prevent="deleteContent"><i class="far fa-trash-alt"></i></div>
 			<input type="hidden" :name="typeFieldName" :value="content.type" />
@@ -48,6 +48,9 @@
 			},
 			foreignKey(){
 				return (this.content.type == "process")? this.content.data.ClientProcess.id : "";
+			},
+			processNumber(){
+				return this.content.data.ClientProcess.process_number;
 			}
 		}
 	}

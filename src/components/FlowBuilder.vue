@@ -61,7 +61,7 @@
 		},
 		methods: {
 			loadProcesses(){
-				let url = document.getElementById('content').getAttribute("processes_url");
+				let url = document.getElementById('processes_url').getAttribute("processes_url");
 				//eslint-disable-next-line
 				console.log(url);
 				//eslint-disable-next-line
