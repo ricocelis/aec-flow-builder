@@ -108,7 +108,7 @@
 				return this.index + 1;
 			},
 			fieldName(){
-				return `sections[${this.index}][name]`;
+				return `data[ClientFlow][sections][${this.index}][name]`;
 			}
 		}
 	}

@@ -41,10 +41,10 @@
 				return (this.content.type == "process")? this.content.data.ClientProcess.name : "";
 			},
 			typeFieldName(){
-				return `sections[${this.section_index}][content][${this.index}].type`;
+				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][type]`;
 			},
 			foreignKeyFieldName(){
-				return `sections[${this.section_index}][content][${this.index}].foreign_key`;
+				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][foreign_key]`;
 			},
 			foreignKey(){
 				return (this.content.type == "process")? this.content.data.ClientProcess.id : "";
