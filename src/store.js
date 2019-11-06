@@ -48,6 +48,9 @@ export default new Vuex.Store({
 		},
 		addFlowSection(state){
 			state.flow_sections.push({ name: '', content: [] });
+		},
+		setFlowData(state,payload){
+			state.flow_sections = payload;
 		}
 	}
 });

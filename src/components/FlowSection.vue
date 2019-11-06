@@ -63,6 +63,9 @@
 				over_below: false
 			}
 		},
+		mounted(){
+			this.section_name = this.section.name;
+		},
 		methods: {
 			/**
 			 * user dropped process above
@@ -109,6 +112,11 @@
 			},
 			fieldName(){
 				return `data[ClientFlow][sections][${this.index}][name]`;
+			}
+		},
+		watch: {
+			section(){
+				this.section_name = this.section.name;
 			}
 		}
 	}

@@ -63,15 +63,40 @@
 			loadProcesses(){
 				let url = document.getElementById('processes_url').getAttribute("processes_url");
 				//eslint-disable-next-line
-				console.log(url);
-				//eslint-disable-next-line
 				axios.get(url)
 				.then(response => this.handleLoadProcesses(response.data))
 				//eslint-disable-next-line
 				.catch(error => console.log(error));
 			},
+			/**
+			 * save client processes to store
+			 * check if editing a flow
+			 * trigger flow load if editing
+			 * @param  {[type]} response [description]
+			 * @return {[type]}          [description]
+			 */
 			handleLoadProcesses(response){
 				this.$store.commit('setProcesses',response);
+				const dataElement = document.getElementById('processes_url');
+				// check if we have a flow id
+				const client_flow_id = dataElement.getAttribute('client_flow_id');
+				// editing a flow
+				if(client_flow_id.length > 0){
+					const flow_url = dataElement.getAttribute('flow_url');
+					//eslint-disable-next-line
+					axios.get(flow_url)
+					.then(response => this.handleGetFlow(response.data))
+					//eslint-disable-next-line
+					.catch(error => console.log(error));
+				}
+			},
+			/**
+			 * save flow data to store
+			 * @param  {[type]} response [description]
+			 * @return {[type]}          [description]
+			 */
+			handleGetFlow(response){
+				this.$store.commit('setFlowData',response);
 			},
 			activeTabClass(tab){
 				return (tab == this.active_tab)? "active" : "";

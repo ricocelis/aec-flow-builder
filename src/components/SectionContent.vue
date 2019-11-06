@@ -44,7 +44,7 @@
 				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][type]`;
 			},
 			foreignKeyFieldName(){
-				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][foreign_key]`;
+				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][foreign_id]`;
 			},
 			foreignKey(){
 				return (this.content.type == "process")? this.content.data.ClientProcess.id : "";
