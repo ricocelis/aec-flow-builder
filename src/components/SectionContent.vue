@@ -32,7 +32,7 @@
 			deleteContent(){
 				this.$store.commit('deleteSectionContent',{
 					section_index: this.section_index,
-					index: this.section_index
+					index: this.index
 				});
 			}
 		},

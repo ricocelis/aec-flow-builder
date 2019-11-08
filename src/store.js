@@ -44,6 +44,10 @@ export default new Vuex.Store({
 			}
 		},
 		deleteSectionContent(state,payload){
+			//eslint-disable-next-line
+			console.log("delete");
+			//eslint-disable-next-line
+			console.log(payload);
 			state.flow_sections[payload.section_index].content.splice(payload.index, 1);
 		},
 		addFlowSection(state){

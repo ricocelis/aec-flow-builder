@@ -3,11 +3,11 @@
 		<Drag
 			:transfer-data="{ data: { type:'process' , data : this.row_data }}" >
 			<div class="process-info">
-				<span class="process-number">{{ processNumber }}</span> <span class="process-name"> {{ processName }}</span>
+				<span class="process-number">{{ this.row_data.ClientProcess.process_number }}</span> <span class="process-name"> {{ this.row_data.ClientProcess.name }}</span>
 				<i class="fas fa-expand-arrows-alt"></i>
 			</div>
 			<div slot="image" class='draggable-container'>
-				<div class="draggable-item noselect" id="draggableProcess">{{processName}}</div>
+				<div class="draggable-item noselect" id="draggableProcess">{{ this.row_data.ClientProcess.name }}</div>
 			</div>
 		</Drag>
 		<div class="children" v-if="row_data.children.length > 0">
@@ -15,10 +15,8 @@
 					v-for="(row,index) in row_data.children"
 					:key="row.ClientProcess.id"
 					:index="index"
-					:row_data="row"
-					:parent_process_number="processNumber" />
+					:row_data="row" />
 		</div>
-
 	</div>	
 </template>
 
@@ -65,18 +63,6 @@
 			return {}
 		},
 		computed: {
-			processNumber(){
-				// if parent process doesn't has a number ?
-				if(this.parent_process_number == ""){
-					// use my own
-					return this.row_data.ClientProcess.process_number;
-				}else{
-					return `${this.parent_process_number}.${this.index +1}`;
-				}
-			},
-			processName(){
-				return this.row_data.ClientProcess.name;	
-			},
 			// check if it has a search result match
 			matchedClass(){
 				if(this.row_data.name_match == undefined) return "";
