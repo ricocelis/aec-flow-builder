@@ -9,11 +9,15 @@
 					:key="index"
 					:section="section"
 					:index="index" />
-				<div class="add-section" @click.prevent="addSection"><i class="fas fa-plus"></i></div>
+				<div class="add-section"
+					v-if="builder_mode == 'edit'"
+					@click.prevent="addSection"><i class="fas fa-plus"></i></div>
 			</div>
 		</div>
+		<!-- process content viewer -->
+		<FlowContentViewer v-if="builder_mode == 'view'" />
 		<!-- processes and flows to drag -->
-		<div class="processes">
+		<div class="processes" v-if="builder_mode == 'edit'">
 			<div class="tabs-and-search">
 				<div class="tabs">
 					<a href="#" :class="activeTabClass('processes')" @click.prevent="setActiveTab('processes')">Processes</a>
@@ -26,7 +30,7 @@
 					<input type="text" class="search-box" placeholder="Search" v-model="term">
 				</div>
 			</div>
-			<div class="process-list" v-show="isActiveTab('processes')">
+			<div class="process-list" v-show="isActiveTab('processes')" v-if="builder_mode == 'edit'">
 				<ProcessRow
 					v-for="(row,index) in processes"
 					:key="row.ClientProcess.id"
@@ -43,12 +47,14 @@
 <script>
 	import ProcessRow from '@/components/ProcessRow.vue';
 	import FlowSection from '@/components/FlowSection.vue';
+	import FlowContentViewer from '@/components/FlowContentViewer.vue';
 	import {mapState} from 'vuex';
 	export default {
 		name: "flow-builder",
 		components: {
 			ProcessRow,
 			FlowSection,
+			FlowContentViewer
 		},
 		data(){
 			return {
@@ -80,6 +86,12 @@
 				const dataElement = document.getElementById('processes_url');
 				// check if we have a flow id
 				const client_flow_id = dataElement.getAttribute('client_flow_id');
+
+				// get mode
+				this.$store.commit('setBuilderMode',dataElement.getAttribute('mode'));
+
+				this.$store.commit('setGetPathUrl',dataElement.getAttribute('path_url'));
+
 				// editing a flow
 				if(client_flow_id.length > 0){
 					const flow_url = dataElement.getAttribute('flow_url');
@@ -119,7 +131,8 @@
 			...mapState({
 				processes : state => state.filtered_processes,
 				process_object: state => state.process_object,
-				flow_sections: state => state.flow_sections
+				flow_sections: state => state.flow_sections,
+				builder_mode: state => state.mode
 			})
 		},
 		watch: {

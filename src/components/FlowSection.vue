@@ -1,13 +1,18 @@
 <template>
 	<div class="flow-section">
-		<div class="section-name">
+		<div class="section-name"
+			v-if="builder_mode == 'edit'">
 			<span>{{ sectionNumber }})</span>
 			<input type="text" placeholder="Title" v-model="section_name">
 			<input type="hidden" :name="fieldName" :value="section_name" />
 		</div>
+		<div class="section-name">
+			<span>{{ sectionNumber }}) {{ section_name }}</span>
+		</div>
 		<div class="section-content">
 			<!-- add at the beginning -->
-			<Drop 
+			<Drop
+				v-if="builder_mode == 'edit'"
 				@drop="onDropAbove"
 				@dragover="over_above = true"
 				@dragleave="over_above = false">
@@ -25,6 +30,7 @@
 				:content="content" />
 			<!-- add at the end -->
 			<Drop
+				v-if="builder_mode == 'edit'"
 				@drop="onDropBelow"
 				@dragover="over_below = true"
 				@dragleave="over_below = false">
@@ -40,6 +46,7 @@
 <script>
 	import SectionContent from '@/components/SectionContent.vue';
 	import {Drop} from 'vue-drag-drop';
+	import {mapState} from 'vuex';
 	export default {
 		name: "flow-section",
 		components: {
@@ -112,7 +119,10 @@
 			},
 			fieldName(){
 				return `data[ClientFlow][sections][${this.index}][name]`;
-			}
+			},
+			...mapState({
+				builder_mode: state => state.mode
+			})
 		},
 		watch: {
 			section(){

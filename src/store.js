@@ -6,13 +6,22 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
+		mode: "edit", // flow builder mode
 		processes: [],
 		process_object: {},
 		filtered_processes: [],
 		draggable_process : {},
 		flow_sections: [
 			{ name: '', content: [] }
-		]
+		],
+		// current active process when viewing a process
+		active_content_item: {
+			section_index: 0,
+			content: {}
+		},
+		active_content: {},
+		active_content_breadcrumb: [],
+		get_path_route: ""
 	},
 	mutations: {
 		setProcesses(state,payload){
@@ -44,10 +53,6 @@ export default new Vuex.Store({
 			}
 		},
 		deleteSectionContent(state,payload){
-			//eslint-disable-next-line
-			console.log("delete");
-			//eslint-disable-next-line
-			console.log(payload);
 			state.flow_sections[payload.section_index].content.splice(payload.index, 1);
 		},
 		addFlowSection(state){
@@ -55,9 +60,109 @@ export default new Vuex.Store({
 		},
 		setFlowData(state,payload){
 			state.flow_sections = payload;
+			// if viewing flow
+			if(state.mode == "view"){
+				// show first content
+				let firstContent = payload[0].content[0];
+				if(firstContent.type == "process"){
+					state.active_content_item = {
+						section_index: 0,
+						content: firstContent	
+					};
+					let active = null;
+					let active_id = firstContent.data.ClientProcess.id;
+					for(let i in state.processes){
+						const p = state.processes[i];
+						if(p.ClientProcess.id == active_id){
+							active = p;
+							break;
+						}else{
+							// check children
+							if(p.children.length > 0){
+								active = checkChildrenForActiveProcess(p.children,active_id);
+								if(active) break;
+							}
+						}
+					}
+					if(active != null) state.active_content = active;
+
+					// get the path to the current node
+					//eslint-disable-next-line
+					axios.get(`${state.get_path_route}/${active_id}`)
+					.then(response => state.active_content_breadcrumb = response.data)
+					//eslint-disable-next-line
+					.catch(error => console.log(error));
+				}
+			}
+		},
+		setBuilderMode(state,payload){
+			state.mode = payload;
+		},
+		setGetPathUrl(state,payload){
+			state.get_path_route = payload;
+		},
+		/**
+		 * set current node as active
+		 * find current node in proceess tree.
+		 * set breadcrumb array
+		 * @param {[type]} state   [description]
+		 * @param {[type]} payload [description]
+		 */
+		setActiveContent(state,payload){
+			state.active_content_item = payload;
+			// loop through processes and find active
+			if(payload.content.type == "process"){
+				let active = null;
+				let active_id = payload.content.data.ClientProcess.id;
+				for(let i in state.processes){
+					const p = state.processes[i];
+					if(p.ClientProcess.id == active_id){
+						active = p;
+						break;
+					}else{
+						// check children
+						if(p.children.length > 0){
+							active = checkChildrenForActiveProcess(p.children,active_id);
+							if(active) break;
+						}
+					}
+				}
+				if(active != null) state.active_content = active;
+
+				// get the path to the current node
+				//eslint-disable-next-line
+				axios.get(`${state.get_path_route}/${active_id}`)
+				.then(response => state.active_content_breadcrumb = response.data)
+				//eslint-disable-next-line
+				.catch(error => console.log(error));
+			}
 		}
 	}
 });
+
+/**
+ * loop through process children to find active node.
+ * @param  {[type]} children  [description]
+ * @param  {[type]} active_id [description]
+ * @return {[type]}           [description]
+ */
+function checkChildrenForActiveProcess(children,active_id){
+	let active = null;
+	for(let i in children){
+		const p = children[i];
+		if(parseInt(p.ClientProcess.id) == parseInt(active_id)){
+			active = p;
+			break;
+		}else{
+			// check children
+			if(p.children.length > 0){
+				active = checkChildrenForActiveProcess(p.children,active_id);
+				if(active) break;
+			}
+		}
+	}
+	return active;
+}
 	
 /**
  * mark each row as match if they have it
