@@ -2,7 +2,7 @@
 	<div class="flow-builder">
 		<!-- flow builder -->
 		<div class="flow">
-			<div class="flow-name">{{ flowName }}</div>
+			<div class="flow-name">{{ flow_name }}</div>
 			<div class="flow-sections">
 				<FlowSection
 					v-for="(section,index) in flow_sections"
@@ -60,12 +60,19 @@
 			return {
 				active_tab: "processes",
 				term: "",
+				flow_name: ""
 			}
 		},
 		mounted(){
 			this.loadProcesses();
+			let flowNameField = document.getElementById("ClientFlowName");
+			flowNameField.addEventListener("change",() => this.updateFlowName());
+			this.updateFlowName();
 		},
 		methods: {
+			updateFlowName(){
+				this.flow_name = document.getElementById("ClientFlowName").value;
+			},
 			loadProcesses(){
 				let url = document.getElementById('processes_url').getAttribute("processes_url");
 				//eslint-disable-next-line
@@ -125,9 +132,9 @@
 
 		},
 		computed: {
-			flowName(){
+			/*flowName(){
 				return "Payroll Flow";
-			},
+			},*/
 			...mapState({
 				processes : state => state.filtered_processes,
 				process_object: state => state.process_object,

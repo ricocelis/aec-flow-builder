@@ -6,7 +6,7 @@
 			<input type="text" placeholder="Title" v-model="section_name">
 			<input type="hidden" :name="fieldName" :value="section_name" />
 		</div>
-		<div class="section-name">
+		<div class="section-name" v-if="builder_mode == 'view'">
 			<span>{{ sectionNumber }}) {{ section_name }}</span>
 		</div>
 		<div class="section-content">
