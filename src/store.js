@@ -7,10 +7,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		mode: "edit", // flow builder mode
+		processes_list: [],
 		processes: [],
 		process_object: {},
 		filtered_processes: [],
 		draggable_process : {},
+		process_index: 0,
 		flow_sections: [
 			{ name: '', content: [] }
 		],
@@ -25,9 +27,16 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		setProcesses(state,payload){
-			state.process_object = payload.ClientProcess;
-			state.processes = payload.children;
-			state.filtered_processes = payload.children;
+			state.processes_list = payload;
+			state.process_object = payload[0].ClientProcess;
+			state.processes = payload[0].children;
+			state.filtered_processes = payload[0].children;
+		},
+		setProcessIndex(state,payload){
+			state.process_index = payload;
+			state.process_object = state.processes_list[state.process_index].ClientProcess;
+			state.processes = state.processes_list[state.process_index].children;
+			state.filtered_processes = state.processes_list[state.process_index].children;
 		},
 		setFilterProcesses(state,payload){
 			const terms = payload.trim().toLowerCase().split(" ");
@@ -71,16 +80,19 @@ export default new Vuex.Store({
 					};
 					let active = null;
 					let active_id = firstContent.data.ClientProcess.id;
-					for(let i in state.processes){
-						const p = state.processes[i];
-						if(p.ClientProcess.id == active_id){
-							active = p;
-							break;
-						}else{
-							// check children
-							if(p.children.length > 0){
-								active = checkChildrenForActiveProcess(p.children,active_id);
-								if(active) break;
+					for(let p in state.processes_list){
+						const processes = state.processes_list[p];
+						for(let i in processes){
+							const p = processes[i];
+							if(p.ClientProcess.id == active_id){
+								active = p;
+								break;
+							}else{
+								// check children
+								if(p.children.length > 0){
+									active = checkChildrenForActiveProcess(p.children,active_id);
+									if(active) break;
+								}
 							}
 						}
 					}
@@ -114,16 +126,19 @@ export default new Vuex.Store({
 			if(payload.content.type == "process"){
 				let active = null;
 				let active_id = payload.content.data.ClientProcess.id;
-				for(let i in state.processes){
-					const p = state.processes[i];
-					if(p.ClientProcess.id == active_id){
-						active = p;
-						break;
-					}else{
-						// check children
-						if(p.children.length > 0){
-							active = checkChildrenForActiveProcess(p.children,active_id);
-							if(active) break;
+				for(let p in state.processes_list){
+					const processes = state.processes_list[p];
+					for(let i in processes){
+						const p = processes[i];
+						if(p.ClientProcess.id == active_id){
+							active = p;
+							break;
+						}else{
+							// check children
+							if(p.children.length > 0){
+								active = checkChildrenForActiveProcess(p.children,active_id);
+								if(active) break;
+							}
 						}
 					}
 				}
