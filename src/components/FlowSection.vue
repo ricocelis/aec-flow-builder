@@ -16,25 +16,31 @@
 				@drop="onDropAbove"
 				@dragover="over_above = true"
 				@dragleave="over_above = false">
-				<div class="section-content-row">
+				<div class="section-content-row drop-section">
 					<div class="arrow"></div>
 					<div class="add-content" :class="{ active: over_above }"><i class="fas fa-plus"></i></div>
 				</div>
 			</Drop>
-			<!-- list of all content -->
-			<SectionContent
-				v-for="(content,cindex) in section.content"
-				:key="contentKey(content)"
-				:index="cindex"
-				:section_index="index"
-				:content="content" />
-			<!-- add at the end -->
+			<div class="flow-section-content">
+				<Draggable
+					v-model="section.content" 
+					ghost-class="sorting">
+					<!-- list of all content -->
+					<SectionContent
+						v-for="(content,cindex) in section.content"
+						:key="contentKey(content)"
+						:index="cindex"
+						:section_index="index"
+						:content="content" />
+					<!-- add at the end -->
+				</Draggable>
+			</div>
 			<Drop
 				v-if="builder_mode == 'edit'"
 				@drop="onDropBelow"
 				@dragover="over_below = true"
 				@dragleave="over_below = false">
-				<div class="section-content-row" v-show="section.content.length > 0">
+				<div class="section-content-row  drop-section" v-show="section.content.length > 0">
 					<div class="arrow"></div>
 					<div class="add-content" :class="{ active: over_below }"><i class="fas fa-plus"></i></div>
 				</div>
@@ -47,11 +53,13 @@
 	import SectionContent from '@/components/SectionContent.vue';
 	import {Drop} from 'vue-drag-drop';
 	import {mapState} from 'vuex';
+	import Draggable from 'vuedraggable';
 	export default {
 		name: "flow-section",
 		components: {
 			SectionContent,
-			Drop
+			Drop,
+			Draggable
 		},
 		props: {
 			section: {

@@ -1,5 +1,5 @@
 <template>
-	<div class="section-content-row" @click.prevent="onContentSelected">
+	<div class="section-content-row noselect" @click.prevent="onContentSelected" @mousedown="onMouseDown" ref="sectionRow">
 		<div class="arrow"></div>
 		<div class="content" :class="{ active: isActive }">
 			<div class="process-number" v-if="this.content.type == 'process'">{{ processNumber }}</div>
@@ -10,6 +10,7 @@
 				><i class="far fa-trash-alt"></i></div>
 			<input v-if="builder_mode == 'edit'" type="hidden" :name="typeFieldName" :value="content.type" />
 			<input v-if="builder_mode == 'edit'" type="hidden" :name="foreignKeyFieldName" :value="foreignKey" />
+			<input v-if="builder_mode == 'edit'" type="hidden" :name="foreignKeyFieldDisplayOrder" :value="index" />
 		</div>
 	</div>
 </template>
@@ -32,6 +33,11 @@
 				default: 0
 			}
 		},
+		data(){
+			return {
+				is_sorting: false
+			}
+		},
 		methods: {
 			deleteContent(){
 				this.$store.commit('deleteSectionContent',{
@@ -44,6 +50,9 @@
 					section_index: this.section_index,
 					content: this.content
 				});
+			},
+			onMouseDown(){
+				if(this.builder_mode == "edit") this.is_sorting = true;
 			}
 		},
 		computed: {
@@ -55,6 +64,9 @@
 			},
 			foreignKeyFieldName(){
 				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][foreign_id]`;
+			},
+			foreignKeyFieldDisplayOrder(){
+				return `data[ClientFlow][sections][${this.section_index}][content][${this.index}][display_order]`;
 			},
 			foreignKey(){
 				return (this.content.type == "process")? this.content.data.ClientProcess.id : "";
@@ -72,6 +84,16 @@
 				builder_mode: state => state.mode,
 				active_content_item: state => state.active_content_item
 			})
+		},
+		watch: {
+			is_sorting(){
+				if(this.is_sorting){
+					this.$refs.sectionRow.classList.add("sorting-row");
+					setTimeout(() => { this.is_sorting = false },500);
+				}else{
+					this.$refs.sectionRow.classList.remove("sorting-row");
+				}
+			}
 		}
 	}
 </script>
