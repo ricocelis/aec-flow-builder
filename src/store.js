@@ -56,6 +56,15 @@ export default new Vuex.Store({
 		 */
 		taskAssigned(state,payload){
 			state.flow_items[payload.index].assigned = payload.resource;
+		},
+		/**
+		 * delete flow item from array
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		deleteFlowItem(state,payload){
+			state.flow_items.splice(payload,1);
 		}
 	}
 });
