@@ -2,11 +2,11 @@
 	<div :class="`task-assignment ${item.assigned.item_type}`">
 		<i class="fas fa-user"
 			v-if="item.assigned.item_id == undefined"
-			@click.prevent="showAssignmentWindow"></i>
+			@click.prevent="toggleAssignmentWindow"></i>
 		<InitialsIcon
 			v-if="item.assigned.item_id != undefined"
 			:name="item.assigned.item"
-			@click="showAssignmentWindow" />
+			@click="toggleAssignmentWindow" />
 		<ResourcesList
 			@selected="onResourceSelected"
 			v-show="show_window" />
@@ -34,8 +34,8 @@
 			};
 		},
 		methods: {
-			showAssignmentWindow(){
-				this.show_window = true;	
+			toggleAssignmentWindow(){
+				this.show_window = ! this.show_window;	
 			},
 			/**
 			 * user has selected a resource to assign to the item
