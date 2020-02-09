@@ -65,6 +65,15 @@ export default new Vuex.Store({
 		 */
 		deleteFlowItem(state,payload){
 			state.flow_items.splice(payload,1);
+		},
+		/**
+		 * after sorting a new list will be sent
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		updateTaskListOrder(state,payload){
+			state.flow_items = payload;
 		}
 	}
 });

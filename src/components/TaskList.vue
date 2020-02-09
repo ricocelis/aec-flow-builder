@@ -1,11 +1,13 @@
 <template>
 	<div class="task-list">
 		<div class="flow-items">
-			<TaskListItem
-				v-for="(item,index) in flow_items"
-				:key="index"
-				:index="index"
-				:item="item" />
+			<Draggable v-model="flow_items">
+				<TaskListItem
+					v-for="(item,index) in flow_items"
+					:key="index"
+					:index="index"
+					:item="item" />
+			</Draggable>
 		</div>
 		<div class="list-footer">
 			<a href="#" @click.prevent="addTask" class="pull-left"><i class="fas fa-plus"></i> Task</a>
@@ -15,12 +17,13 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex';
+	import Draggable from 'vuedraggable';
 	import TaskListItem from '@/components/TaskListItem.vue';
 	export default {
 		name: "task-list",
 		components: {
-			TaskListItem
+			TaskListItem,
+			Draggable
 		},
 		data(){
 			return {
@@ -49,9 +52,10 @@
 			}
 		},
 		computed: {
-			...mapState({
-				flow_items : state => state.flow_items
-			})
+				flow_items: {
+					get() { return this.$store.state.flow_items },
+				set(value) { this.$store.commit('updateTaskListOrder', value); }
+			}
 		}
 	}
 </script>
