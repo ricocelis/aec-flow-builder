@@ -3,6 +3,7 @@
 		<h3 v-if="item.type == 'header'">
 			<input 
 				ref="header_input"
+				:id="`task_item-${this.index}`"
 				type="text"
 				v-model="item_name"
 				placeholder="Enter Header Title..."
@@ -17,6 +18,7 @@
 				type="text"
 				v-model="item_name"
 				placeholder="Enter Header Title..."
+				:id="`task_item-${this.index}`"
 				@focus="onFocus"
 				@blur="onBlur"
 				@keydown="onKeyDown"
@@ -82,7 +84,7 @@
 			onKeyDown(event){
 				const TABKEY = 9;
 				// tab key on last task ? 
-				if(event.keyCode == TABKEY && (this.flow_items.length - 1) == this.index) {
+				if((event.keyCode == TABKEY && ! event.shiftKey) && (this.flow_items.length - 1) == this.index) {
 					event.preventDefault();
 					// add new task
 					this.$store.commit('addFlowItem',{
@@ -100,11 +102,17 @@
 			 */
 			onKeyUp(event){
 
-				const SPACEKEY = 8;
+				const BACKSPACEKEY = 8;
 				// backspace and empty name
-				if(event.keyCode == SPACEKEY && this.item_name.length === 0) {
+				if(event.keyCode == BACKSPACEKEY && this.item_name.length === 0) {
 					event.preventDefault();
-					// add new task
+					// not the last item in the list
+					if(this.index !== 0 && this.flow_items.length !== 1){
+						const prevIndex = this.index - 1;
+						const prevInput = document.getElementById(`task_item-${prevIndex}`);
+						prevInput.focus();
+					}
+					// delete this task
 					this.$store.commit('deleteFlowItem',this.index);
 					return false;
 				}
