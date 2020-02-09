@@ -11,6 +11,10 @@ import Vue from 'vue';
 import App from './App.vue';
 import store from './store';
 
+import { Checkbox, Radio } from 'vue-checkbox-radio';
+Vue.component('checkbox', Checkbox);
+Vue.component('radio', Radio);
+
 new Vue({
   store,
   render: h => h(App)

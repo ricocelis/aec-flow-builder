@@ -1,0 +1,206 @@
+@import './font-awesome/fontawesome.less';
+@import './font-awesome/regular.less';
+@import './font-awesome/solid.less';
+
+@import 'variables';
+@import '_mixins';
+
+.flow-builder{
+	*{
+		box-sizing: border-box;
+	}
+	a {
+		font-size: 15px;
+	}
+	.initials-icon{
+		border-radius: 50px;
+		text-align: center;
+		background-color: @orange;
+		height: 30px;
+	    width: 30px;
+	    display: inline-block;
+	    vertical-align: middle;
+	    position: relative;
+	    line-height: 27px;
+	    span {
+	    	position: relative;
+	    	font-weight: @wbold;
+	    	color: @white;
+	    	font-size: 13px;
+	    }
+	    .no_select;
+	}
+	.flow-header{
+		background-color: @dark-blue;
+		color: @white;
+		font-weight: @wbold;
+		font-size: 15px;
+		padding: 10px 20px;
+		input {
+			box-shadow: none;
+			border: 0;
+			background-color: rgba(0,0,0,0);
+			color: @white;
+			width: auto;
+			.placeholder(darken(@white,10%));
+			font-size: 15px;
+			padding: 0 5px;
+			width: calc(100vw - 200px);
+		}
+	}
+	.flow-windows{
+		display: flex;
+		.task-list{
+			width:40%;
+			height: calc(100vh - 110px);
+			position: relative;
+			border-right: 1px solid @gray;
+			box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
+			.list-footer {
+				position: absolute;
+				bottom:0;
+				left: 0;
+				width: calc(100% + 1px);
+				padding: 10px 20px;
+				background-color: @dark-blue;
+				a {
+					display: inline-block;
+					color: @white;
+				}
+				.clear_after;
+			}
+			.flow-items{
+				height: calc(100% - 40px);
+			}
+			.task-list-item {
+				margin: 5px;
+				padding: 5px;
+				border: 1px solid @transparent;
+				&.header{
+					input{
+						font-size: 20px;
+						font-weight: @wbold;
+					}
+				}
+				input[type="text"]{
+					box-shadow: none;
+					border: 0;
+					background-color: rgba(0,0,0,0);
+					color: @black;
+					.placeholder(lighten(@black,20%));
+					padding: 0 5px;
+				}
+				&.active {
+					border: 1px solid @blue;
+				}
+				&.task{
+					.task{
+						display: flex;
+						min-height: 30px;
+						align-items: center;
+						input[type="text"] {
+							flex-grow: 1;
+							font-size: 15px;
+						}
+						.task-assignment{
+							&.user{
+								& >.initials-icon {
+									background-color: @blue;
+								}
+							}
+							& >.initials-icon{
+								cursor: pointer;
+							}
+							margin-left: 10px;
+							position: relative;
+							.fas {
+								font-size: 20px;
+								color: @light-gray;
+								cursor: pointer;
+								margin-right: 5px;
+							}
+							.resources-list {
+								right: -5px;
+								top: 38px;
+							    position:absolute;
+							    width: 320px;
+							    padding: 10px;
+							    background-color:@white;
+							    border-radius: 10px 0px 10px 10px;
+							    border: 1px solid @gray;
+							    z-index: 1000;
+							    &:before,
+							    &:after{
+							    	content: "\0020";
+								    display:block;
+								    position:absolute;
+								    top:-14px;
+								    right:0px;
+								    z-index:2;
+								    width: 0;
+								    height: 0;
+								    overflow:hidden;
+								    border: solid 14px transparent;
+								    border-top: 0;
+								    border-bottom-color:@white;
+							    }
+							    &:before {
+								    top:-15px;
+								    z-index:1;
+								    border-bottom-color:@gray;
+								}
+								.links {
+									padding-bottom: 10px;
+									border-bottom: 1px solid @light-gray;
+									margin-bottom: 10px;
+									a{
+										display: inline-block;
+										color: @black;
+										&.active {
+											font-weight: @wbold;
+											color: @orange;
+										}
+									}
+									.clear_after;
+								}
+								.tabs{
+									min-height: 100px;
+							    	max-height: 250px;
+							    	overflow: auto;
+								}
+								.resource-list-item{
+									font-size: 14px;
+									margin-bottom: 5px;
+									color: @black;
+									.no_select;
+									cursor: pointer;
+									.initials-icon{
+										margin-right: 10px;
+										cursor: pointer;
+									}
+									&.user{
+										.initials-icon {
+											background-color: @blue;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.pull-left{
+		float: left;
+	}
+	.pull-right{
+		float: right;
+	}
+
+	.checkbox-component > input + label > .input-box {
+		border: 1px solid @blue;
+		width: 20px;
+		height: 20px;
+	}
+}
