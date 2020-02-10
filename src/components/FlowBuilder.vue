@@ -10,6 +10,7 @@
 		</div>
 		<div class="flow-windows">
 			<TaskList />
+			<TaskWidgets />
 		</div>
 	</div>
 </template>
@@ -17,10 +18,12 @@
 <script>
 	
 	import TaskList from "@/components/TaskList.vue";
+	import TaskWidgets from '@/components/TaskWidgets.vue';
 	export default {
 		name: "flow-builder",
 		components: {
-			TaskList
+			TaskList,
+			TaskWidgets
 		},
 		props: {
 		},

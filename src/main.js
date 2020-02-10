@@ -15,6 +15,9 @@ import { Checkbox, Radio } from 'vue-checkbox-radio';
 Vue.component('checkbox', Checkbox);
 Vue.component('radio', Radio);
 
+import VTooltip from 'v-tooltip';
+Vue.use(VTooltip);
+
 new Vue({
   store,
   render: h => h(App)
