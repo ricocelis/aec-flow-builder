@@ -9,7 +9,8 @@ export default new Vuex.Store({
 		flow_name: "",
 		flow_items: [],
 		users: [],
-		groups: []
+		groups: [],
+		active_index: 0
 	},
 	mutations: {
 		/**
@@ -23,11 +24,24 @@ export default new Vuex.Store({
 		/**
 		 * add new item to flow items array
 		 * @param {[type]} state   [description]
-		 * @param {[type]} payload [description]
 		 */
-		addFlowItem(state,payload){
-			//console.log(state);
-			state.flow_items.push(payload);
+		addNewHeader(state){
+			state.flow_items.push({
+				type: 'header',
+				name: "",
+			});
+		},
+		/**
+		 * add new empty task to list
+		 * @param {[type]} state [description]
+		 */
+		addNewTask(state){
+			state.flow_items.push({
+				type: 'task',
+				name: "",
+				assigned: {},
+				widgets: []
+			});
 		},
 		/**
 		 * update the title/name of a flow item
@@ -74,6 +88,29 @@ export default new Vuex.Store({
 		 */
 		updateTaskListOrder(state,payload){
 			state.flow_items = payload;
+		},
+		/**
+		 * set active index
+		 * @param {[type]} state   [description]
+		 * @param {[type]} payload [description]
+		 */
+		setActiveIndex(state,payload){
+			state.active_index = payload;
+		},
+		/**
+		 * add new text editor widget
+		 * @param {[type]} state [description]
+		 */
+		addTextEditorWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component : "TextEditor",
+				data: {
+					content: ""
+				}
+			})
+		},
+		updateWidgetTextContent(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].content = payload.value;
 		}
 	}
 });

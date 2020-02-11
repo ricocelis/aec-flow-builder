@@ -8,7 +8,6 @@
 				v-model="item_name"
 				placeholder="Enter Header Title..."
 				@focus="onFocus"
-				@blur="onBlur"
 				@keydown="onKeyDown"
 				@keyup="onKeyUp"></h3>
 		<div class="task" v-if="item.type=='task'">
@@ -17,10 +16,9 @@
 				ref="task_input"
 				type="text"
 				v-model="item_name"
-				placeholder="Enter Header Title..."
+				placeholder="Enter Task Item..."
 				:id="`task_item-${this.index}`"
 				@focus="onFocus"
-				@blur="onBlur"
 				@keydown="onKeyDown"
 				@keyup="onKeyUp">
 			<TaskAssignment :item="item" @assign="onResourceSelected" />
@@ -57,13 +55,24 @@
 			}else{
 				this.$refs.header_input.focus();
 			}
+			this.$bus.$on('active_task', (index) => {
+				this.handleActiveTask(index);
+			});
 		},
 		methods: {
-			onFocus(){
+			onFocus(){ 
 				this.is_active = true;
+				this.$bus.$emit('active_task', this.index);
+				this.$store.commit('setActiveIndex',this.index);
 			},
-			onBlur(){
-				this.is_active = false;
+			/**
+			 * event for when a task is set to active
+			 * check if the index matches. If not set task to inactive
+			 * @param  {[type]} index [description]
+			 * @return {[type]}       [description]
+			 */
+			handleActiveTask(index){
+				if(this.index !== index) this.is_active = false;
 			},
 			/**
 			 * user has selected a resource to assign to this task item
@@ -87,11 +96,7 @@
 				if((event.keyCode == TABKEY && ! event.shiftKey) && (this.flow_items.length - 1) == this.index) {
 					event.preventDefault();
 					// add new task
-					this.$store.commit('addFlowItem',{
-						type: 'task',
-						name: "",
-						assigned: {}
-					});
+					this.$store.commit('addNewTask');
 					return false;
 				}
 			},

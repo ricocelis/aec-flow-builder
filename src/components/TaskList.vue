@@ -35,20 +35,13 @@
 			 * send request to store to add a new item to the task list
 			 */
 			addTask(){
-				this.$store.commit('addFlowItem',{
-					type: 'task',
-					name: "",
-					assigned: {}
-				});
+				this.$store.commit('addNewTask');
 			},
 			/**
 			 * send request to store to add new header to task list
 			 */
 			addHeader(){
-				this.$store.commit('addFlowItem',{
-					type: 'header',
-					name: "",
-				});
+				this.$store.commit('addNewHeader');
 			}
 		},
 		computed: {

@@ -22,7 +22,7 @@
 	    display: inline-block;
 	    vertical-align: middle;
 	    position: relative;
-	    line-height: 28px;
+	    line-height: 30px;
 	    span {
 	    	position: relative;
 	    	font-weight: @wbold;
@@ -76,7 +76,7 @@
 			.task-list-item {
 				margin: 5px;
 				padding: 5px;
-				border: 1px solid @light-gray;
+				border: 2px solid @light-gray;
 				background-color: rgba(255,255,255,.5);
 				&.header{
 					border: 1px solid @transparent;
@@ -93,9 +93,6 @@
 					color: @black;
 					.placeholder(lighten(@black,20%));
 					padding: 0 5px;
-				}
-				&.active {
-					border: 1px solid @blue;
 				}
 				&.task{
 					.task{
@@ -192,6 +189,32 @@
 						}
 					}
 				}
+				&.active {
+					background-color: @blue;
+					border: 2px solid @blue;
+					color: @white;
+					input[type="text"]{
+						color: @white;
+						.placeholder(darken(@white,20%));
+					}
+					&.task {
+						.task {
+							.task-assignment {
+								.fas {
+									color: @white;
+								}
+								&.user{
+									& >.initials-icon {
+										background-color: @white;
+										span {
+											color: @blue;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		.task-widgets {
@@ -200,6 +223,7 @@
 			box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
 			display: flex;
 			.sidenav {
+				z-index: 1;
 				background-color: @white;
 				width: 60px;
 				box-shadow: 7px 0px 9px -7px rgba(0,0,0,0.4);
@@ -221,6 +245,17 @@
 				.divider {
 					margin: 10px 0;
 					border: 1px solid @black;
+				}
+			}
+			.widgets-list {
+				flex-grow: 1;
+				height: calc(100vh - 110px);
+				overflow: auto;
+				.flow-widget {
+					padding: 20px;
+					&.alt-row{
+						background-color: lighten(@black, 70%);
+					}
 				}
 			}
 		}

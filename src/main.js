@@ -18,6 +18,16 @@ Vue.component('radio', Radio);
 import VTooltip from 'v-tooltip';
 Vue.use(VTooltip);
 
+// event bus
+const EventBus = new Vue();
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get: function () {
+      return EventBus
+    }
+  }
+});
+
 new Vue({
   store,
   render: h => h(App)
