@@ -253,8 +253,24 @@
 				overflow: auto;
 				.flow-widget {
 					padding: 20px;
+					position: relative;
 					&.alt-row{
 						background-color: lighten(@black, 70%);
+					}
+					.delete-widget {
+						position: absolute;
+						right: 13px;
+						top: 13px;
+						cursor: pointer;
+						background-color: @white;
+						border-radius: 50%;
+						height: 20px;
+						width: 20px;
+						z-index: 2;
+						.fas {
+							color: @red;
+							font-size: 20px;
+						}
 					}
 				}
 			}

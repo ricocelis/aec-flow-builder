@@ -4,6 +4,9 @@
 			v-model="content"
 			:api-key="apiKey"
 			:init="tiny_options" />
+		<div class="delete-widget" @click.prevent="deleteWidget">
+			<i class="fas fa-times-circle"></i>
+		</div>
 	</div>
 </template>
 
@@ -65,6 +68,15 @@
 					images_upload_url: '',
 					images_upload_credentials: true
 				}
+			}
+		},
+		methods: {
+			/**
+			 * send request to store to delete current widget
+			 * @return {[type]} [description]
+			 */
+			deleteWidget(){
+				this.$store.commit('deleteWidget',this.index);
 			}
 		},
 		computed: {

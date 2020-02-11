@@ -109,8 +109,24 @@ export default new Vuex.Store({
 				}
 			})
 		},
+		/**
+		 * user is typing content on text editor
+		 * save it to the correct object
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
 		updateWidgetTextContent(state,payload){
 			state.flow_items[state.active_index].widgets[payload.index].content = payload.value;
+		},
+		/**
+		 * remove widget using index from active item in flow items list
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		deleteWidget(state,payload){
+			state.flow_items[state.active_index].widgets.splice(payload,1);
 		}
 	}
 });
