@@ -45,8 +45,8 @@
 			}
 		},
 		computed: {
-				flow_items: {
-					get() { return this.$store.state.flow_items },
+			flow_items: {
+				get() { return this.$store.state.flow_items },
 				set(value) { this.$store.commit('updateTaskListOrder', value); }
 			}
 		}

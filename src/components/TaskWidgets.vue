@@ -18,7 +18,7 @@
 				</div>
 				<div class="divider"></div>
 				<!-- tasks -->
-				<div class="widget-icon" v-tooltip.top-center="`+ Subtasks`">
+				<div class="widget-icon" v-tooltip.top-center="`+ Subtasks`" @click.prevent="addSubtasks">
 					<i class="fas fa-tasks"></i>
 				</div>
 			</div>
@@ -37,11 +37,13 @@
 	import {mapState} from 'vuex';
 	import TextEditor from '@/components/widgets/TextEditor.vue';
 	import FileUpload from '@/components/widgets/FileUpload.vue';
+	import SubTasks from '@/components/widgets/SubTasks.vue';
 	export default {
 		name: "task-widgets",
 		components: {
 			TextEditor,
-			FileUpload
+			FileUpload,
+			SubTasks
 		},
 		data(){
 			return {
@@ -54,6 +56,9 @@
 			},
 			addUpload(){
 				this.$store.commit('addUploadWidget');
+			},
+			addSubtasks(){
+				this.$store.commit('addSubtasksWidget');
 			}
 		},
 		computed: {

@@ -127,6 +127,16 @@ export default new Vuex.Store({
 				}
 			})
 		},
+		addSubtasksWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component : "SubTasks",
+				data: {
+					tasks: [
+						{ name: "" }
+					]
+				}
+			});
+		},
 		/**
 		 * user is typing content on text editor
 		 * save it to the correct object
@@ -163,6 +173,23 @@ export default new Vuex.Store({
 		 */
 		fileUploaded(state,payload){
 			state.flow_items[state.active_index].widgets[payload.index].data.files = [payload.file];
+		},
+		/**
+		 * add new subtask to subtask widget
+		 * @param {[type]} state   [description]
+		 * @param {[type]} payload [description]
+		 */
+		addNewSubtask(state,payload){
+			state.flow_items[state.active_index].widgets[payload].data.tasks.push({ name: "" });
+		},
+		/**
+		 * delete a subtask from a widget row.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		deleteSubTask(state,payload){
+			state.flow_items[state.active_index].widgets[payload.widget_index].data.tasks.splice(payload.index,1);
 		}
 	}
 });

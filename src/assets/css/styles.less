@@ -257,9 +257,11 @@
 				.flow-widget {
 					padding: 20px;
 					position: relative;
+					background-color: @white;
+					box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
 					&.alt-row{
 						background-color: lighten(@black, 70%);
-						box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
+						
 					}
 					.delete-widget {
 						position: absolute;
@@ -274,6 +276,63 @@
 						.fas {
 							color: @red;
 							font-size: 20px;
+						}
+					}
+					&.subtasks{
+						.subtask-list{
+							position: relative;
+							.task-list-item {
+								margin: 5px 0;
+								padding: 5px;
+								border: 2px solid @light-gray;
+								background-color: rgba(255,255,255,.5);
+								&.header{
+									border: 1px solid @transparent;
+									background-color: @transparent;
+									input{
+										font-size: 20px;
+										font-weight: @wbold;
+									}
+								}
+								input[type="text"]{
+									box-shadow: none;
+									border: 0;
+									background-color: rgba(0,0,0,0);
+									color: @black;
+									.placeholder(lighten(@black,20%));
+									padding: 0 5px;
+								}
+								.task{
+									display: flex;
+									min-height: 30px;
+									align-items: center;
+									input[type="text"] {
+										flex-grow: 1;
+										font-size: 15px;
+									}
+									.task-assignment{
+										&.user{
+											& >.initials-icon {
+												background-color: @blue;
+											}
+										}
+										& >.initials-icon{
+											cursor: pointer;
+										}
+										margin-left: 10px;
+										position: relative;
+									}
+								}
+								&.active {
+									background-color: @blue;
+									border: 2px solid @blue;
+									color: @white;
+									input[type="text"]{
+										color: @white;
+										.placeholder(darken(@white,20%));
+									}
+								}
+							}
 						}
 					}
 				}

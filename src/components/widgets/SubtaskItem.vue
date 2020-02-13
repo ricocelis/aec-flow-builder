@@ -1,40 +1,31 @@
 <template>
-	<div :class="`task-list-item ${item.type} ${activeClass}`">
-		<h3 v-if="item.type == 'header'">
-			<input 
-				ref="header_input"
-				:id="`task_item-${this.index}`"
-				type="text"
-				v-model="item_name"
-				placeholder="Enter Header Title..."
-				@focus="onFocus"
-				@keydown="onKeyDown"
-				@keyup="onKeyUp"></h3>
-		<div class="task" v-if="item.type=='task'">
+	<div :class="`task-list-item ${activeClass}`">
+		<div class="task">
 			<checkbox :disabled="true" />
 			<input 
 				ref="task_input"
 				type="text"
 				v-model="item_name"
 				placeholder="Enter Task Item..."
-				:id="`task_item-${this.index}`"
+				:id="`subtask_item-${widget_index}-${this.index}`"
 				@focus="onFocus"
 				@keydown="onKeyDown"
 				@keyup="onKeyUp">
-			<TaskAssignment :item="item" @assign="onResourceSelected" />
 		</div>
 	</div>
 </template>
 
 <script>
-	import TaskAssignment from '@/components/TaskAssignment.vue';
 	import {mapState} from 'vuex';
 	export default {
 		name: 'task-list-item',
 		components: {
-			TaskAssignment
 		},
 		props: {
+			widget_index:{
+				type: Number,
+				default: 0
+			},
 			index: {
 				type: Number,
 				default: 0
@@ -50,20 +41,16 @@
 			};
 		},
 		mounted(){
-			if(this.item.type == "task"){
-				this.$refs.task_input.focus();
-			}else{
-				this.$refs.header_input.focus();
-			}
-			this.$bus.$on('active_task', (index) => {
+			this.$refs.task_input.focus();
+
+			this.$bus.$on('active_subtask', (index) => {
 				this.handleActiveTask(index);
 			});
 		},
 		methods: {
 			onFocus(){ 
 				this.is_active = true;
-				this.$bus.$emit('active_task', this.index);
-				this.$store.commit('setActiveIndex',this.index);
+				this.$bus.$emit('active_subtask', this.index);
 			},
 			/**
 			 * event for when a task is set to active
@@ -75,17 +62,6 @@
 				if(this.index !== index) this.is_active = false;
 			},
 			/**
-			 * user has selected a resource to assign to this task item
-			 * @param  {[type]} resource [description]
-			 * @return {[type]}          [description]
-			 */
-			onResourceSelected(resource){
-				this.$store.commit('taskAssigned',{
-					index: this.index,
-					resource: resource
-				});
-			},
-			/**
 			 * capture keyup event
 			 * if TAB key add new task
 			 * if BACKSPACE delete item
@@ -93,10 +69,10 @@
 			onKeyDown(event){
 				const TABKEY = 9;
 				// tab key on last task ? 
-				if((event.keyCode == TABKEY && ! event.shiftKey) && (this.flow_items.length - 1) == this.index) {
+				if((event.keyCode == TABKEY && ! event.shiftKey) && (this.subtasks.length - 1) == this.index) {
 					event.preventDefault();
 					// add new task
-					this.$store.commit('addNewTask');
+					this.$store.commit('addNewSubtask',this.widget_index);
 					return false;
 				}
 			},
@@ -112,17 +88,20 @@
 				if(event.keyCode == BACKSPACEKEY && this.item_name.length === 0) {
 					event.preventDefault();
 					// not the last item in the list
-					if(this.index !== 0 && this.flow_items.length !== 1){
+					if(this.index !== 0 && this.subtasks.length !== 1){
 						const prevIndex = this.index - 1;
-						const prevInput = document.getElementById(`task_item-${prevIndex}`);
+						const prevInput = document.getElementById(`subtask_item-${this.widget_index}-${prevIndex}`);
 						prevInput.focus();
 					}
 					// if not the first item in list
 					if(this.index !== 0){
 						// delete this task
-						this.$store.commit('deleteFlowItem',this.index);
-						return false;
+						this.$store.commit('deleteSubTask',{
+							widget_index: this.widget_index,
+							index: this.index
+						});
 					}
+					return false;
 				}
 			}
 		},
@@ -131,16 +110,20 @@
 				return this.is_active ? "active" : "";
 			},
 			item_name: {
-				get() { return this.$store.state.flow_items[this.index].name },
+				get() { return this.$store.state.flow_items[this.active_index].widgets[this.widget_index].data.tasks[this.index].name },
 				set(value){ 
-					this.$store.commit('updateItemName',{
+					this.$store.commit('updateSubtaskName',{
+						widget_index: this.index,
 						index: this.index,
-						value: value
+						value: value,
 					});
 				}
 			},
+			subtasks: {
+				get() { return this.$store.state.flow_items[this.active_index].widgets[this.widget_index].data.tasks },
+			},
 			...mapState({
-				flow_items: state => state.flow_items
+				active_index: state => state.active_index,
 			})
 		},
 	}
