@@ -13,6 +13,9 @@
 	a {
 		font-size: 15px;
 	}
+	.hide {
+		display: none;
+	}
 	.initials-icon{
 		border-radius: 50px;
 		text-align: center;
@@ -256,6 +259,7 @@
 					position: relative;
 					&.alt-row{
 						background-color: lighten(@black, 70%);
+						box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
 					}
 					.delete-widget {
 						position: absolute;
@@ -328,6 +332,9 @@
 
 	.drop-files {
 	    .file {
+	    	.file-name {
+	    		font-weight: @wbold;
+	    	}
 	        .inner {
 	            display: flex;
 	            justify-content: space-between;

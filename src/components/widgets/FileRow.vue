@@ -63,14 +63,13 @@ export default {
             formData.append("file", this.record.file);
             this.show_progress = true;
             // upload configuration
-            var config = {
-                'X-CSRF-TOKEN' : document.querySelector('#token').getAttribute('content'),
+            let config = {
                 onUploadProgress: function(event){
                     var progress = Math.round( (event.loaded * 100) / event.total );
                     this.onUploadProgress(progress);
                 }.bind(this)
             };
-            let endpoint = `/upload/temp`;
+            let endpoint = `${process.env.VUE_APP_API_URL}client_flows/temp_upload`;
             //eslint-disable-next-line
             axios.post(endpoint,formData,config)
                 .then(response => this.fileUploadSuccess(response.data))
@@ -96,8 +95,8 @@ export default {
                 this.file_size = response.file_size;
                 this.$emit('success',{
                     uploaded : true,
-                    file_name: response.name,
-                    original: response.original,
+                    file_name: response.filename,
+                    original: response.original_filename,
                     file_size: response.file_size,
                     extension: response.extension
                 });

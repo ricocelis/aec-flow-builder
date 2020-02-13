@@ -154,6 +154,15 @@ export default new Vuex.Store({
 		 */
 		deleteWidget(state,payload){
 			state.flow_items[state.active_index].widgets.splice(payload,1);
+		},
+		/**
+		 * file was uploaded add to state.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		fileUploaded(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].data.files = [payload.file];
 		}
 	}
 });

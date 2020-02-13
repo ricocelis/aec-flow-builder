@@ -150,7 +150,10 @@
         * @return {[type]}        [description]
         */
         onFileUploaded(record){
-            this.$store.commit('fileUploaded',record);
+            this.$store.commit('fileUploaded',{
+                index: this.index,
+                file: record
+            });
         },
         /**
         * user wants to delete uploaded file.
