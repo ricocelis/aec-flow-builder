@@ -8,7 +8,7 @@
 				</div>
 				<div class="divider"></div>
 				<!-- file upload -->
-				<div class="widget-icon" v-tooltip.top-center="`+ File Upload`">
+				<div class="widget-icon" v-tooltip.top-center="`+ File Upload`"  @click.prevent="addUpload">
 					<i class="fas fa-file-alt"></i>
 				</div>
 				<div class="divider"></div>
@@ -36,10 +36,12 @@
 <script>
 	import {mapState} from 'vuex';
 	import TextEditor from '@/components/widgets/TextEditor.vue';
+	import FileUpload from '@/components/widgets/FileUpload.vue';
 	export default {
 		name: "task-widgets",
 		components: {
-			TextEditor
+			TextEditor,
+			FileUpload
 		},
 		data(){
 			return {
@@ -49,6 +51,9 @@
 		methods: {
 			addTextEditor(){
 				this.$store.commit('addTextEditorWidget');
+			},
+			addUpload(){
+				this.$store.commit('addUploadWidget');
 			}
 		},
 		computed: {

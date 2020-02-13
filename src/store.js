@@ -10,7 +10,13 @@ export default new Vuex.Store({
 		flow_items: [],
 		users: [],
 		groups: [],
-		active_index: 0
+		active_index: 0,
+		allowed_extensions : {
+			/* for image uploads */
+			images : ['jpg','jpeg','gif','png'],
+			/* spreadsheets */
+			documents : ['xls','xlsx','doc','docx','pdf','txt','pptx','ppt']
+		},
 	},
 	mutations: {
 		/**
@@ -110,6 +116,18 @@ export default new Vuex.Store({
 			})
 		},
 		/**
+		 * add new text editor widget
+		 * @param {[type]} state [description]
+		 */
+		addUploadWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component : "FileUpload",
+				data: {
+					files: []
+				}
+			})
+		},
+		/**
 		 * user is typing content on text editor
 		 * save it to the correct object
 		 * @param  {[type]} state   [description]
@@ -117,7 +135,16 @@ export default new Vuex.Store({
 		 * @return {[type]}         [description]
 		 */
 		updateWidgetTextContent(state,payload){
-			state.flow_items[state.active_index].widgets[payload.index].content = payload.value;
+			state.flow_items[state.active_index].widgets[payload.index].data.content = payload.value;
+		},
+		/**
+		 * user is uploading a file
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		updateWidgetFiles(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].data.files = payload.value;
 		},
 		/**
 		 * remove widget using index from active item in flow items list

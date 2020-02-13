@@ -84,7 +84,7 @@
 				return (this.index % 2) == 0 ? "" : "alt-row";
 			},
 			content: {
-				get() { return this.$store.state.flow_items[this.active_index].widgets[this.index].content },
+				get() { return this.$store.state.flow_items[this.active_index].widgets[this.index].data.content },
 				set(value){ 
 					this.$store.commit('updateWidgetTextContent',{
 						index: this.index,
