@@ -33,6 +33,10 @@
 							<div class="widget-icon" @click.prevent="addCheckbox" v-tooltip.top-center="`+ Checkbox`">
 								<i class="far fa-check-square"></i>
 							</div>
+							<div class="h-divider"></div>
+							<div class="widget-icon" @click.prevent="addDatePicker" v-tooltip.top-center="`+ Date Picker`">
+								<i class="far fa-calendar-alt"></i>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -62,6 +66,7 @@
 	import TextArea from '@/components/widgets/TextArea.vue';
 	import SelectField from '@/components/widgets/SelectField.vue';
 	import CheckboxField from '@/components/widgets/CheckboxField.vue';
+	import DatePickerField from '@/components/widgets/DatePicker.vue';
 	export default {
 		name: "task-widgets",
 		components: {
@@ -71,7 +76,8 @@
 			TextField,
 			TextArea,
 			SelectField,
-			CheckboxField
+			CheckboxField,
+			DatePickerField
 		},
 		data(){
 			return {
@@ -99,6 +105,10 @@
 			},
 			addCheckbox(){
 				this.$store.commit('addCheckboxWidget');
+				this.show_form_tools = false;
+			},
+			addDatePicker(){
+				this.$store.commit('addDatePickerWidget');
 				this.show_form_tools = false;
 			},
 			addTextArea(){

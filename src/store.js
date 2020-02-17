@@ -197,6 +197,21 @@ export default new Vuex.Store({
 			})
 		},
 		/**
+		 * add a form DatePicker widget to the current task
+		 * @param {[type]} state [description]
+		 */
+		addDatePickerWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component: "DatePickerField",
+				data : {
+					name: "",
+					instructions: "",
+					multiple: true,
+					options: []
+				}
+			})
+		},
+		/**
 		 * user is typing content on text editor
 		 * save it to the correct object
 		 * @param  {[type]} state   [description]

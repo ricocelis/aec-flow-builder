@@ -7,6 +7,15 @@
 @import 'tooltip';
 
 .flow-builder{
+	.vdp-datepicker{
+		.vdp-datepicker__calendar{
+			header{
+				box-shadow: none;
+				height: 44px;
+				padding: 0;
+			}
+		}
+	}
 	*{
 		box-sizing: border-box;
 	}
@@ -29,7 +38,6 @@
 				vertical-align: middle;
 			}
 		}
-
 	}
 	.form-row {
 		margin-bottom: 10px;
@@ -369,6 +377,10 @@
 						}
 					}
 					&.form-field{
+						input{
+							height: 40px;
+							padding-left: 10px;
+						}
 						.edit {
 							input.label,
 							input.instructions {
