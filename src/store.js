@@ -116,7 +116,7 @@ export default new Vuex.Store({
 			})
 		},
 		/**
-		 * add new text editor widget
+		 * add a upload widget to the current task
 		 * @param {[type]} state [description]
 		 */
 		addUploadWidget(state){
@@ -127,6 +127,10 @@ export default new Vuex.Store({
 				}
 			})
 		},
+		/**
+		 * add a subtasks widget to the current task
+		 * @param {[type]} state [description]
+		 */
 		addSubtasksWidget(state){
 			state.flow_items[state.active_index].widgets.push({
 				component : "SubTasks",
@@ -136,6 +140,61 @@ export default new Vuex.Store({
 					]
 				}
 			});
+		},
+		/**
+		 * add a form textfield widget to the current task
+		 * @param {[type]} state [description]
+		 */
+		addTextFieldWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component: "TextField",
+				data : {
+					name: "",
+					instructions: ""
+				}
+			})
+		},
+		/**
+		 * add a form textarea widget to the current task
+		 * @param {[type]} state [description]
+		 */
+		addTextAreaWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component: "TextArea",
+				data : {
+					name: "",
+					instructions: ""
+				}
+			})
+		},
+		/**
+		 * add a form select widget to the current task
+		 * @param {[type]} state [description]
+		 */
+		addSelectFieldWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component: "SelectField",
+				data : {
+					name: "",
+					instructions: "",
+					options: []
+				}
+			})
+		},
+		/**
+		 * add a form textfield widget to the current task
+		 * @param {[type]} state [description]
+		 */
+		addCheckboxWidget(state){
+			state.flow_items[state.active_index].widgets.push({
+				component: "CheckboxField",
+				data : {
+					name: "",
+					instructions: "",
+					multiple: true,
+					options: []
+				}
+			})
 		},
 		/**
 		 * user is typing content on text editor
@@ -190,6 +249,24 @@ export default new Vuex.Store({
 		 */
 		deleteSubTask(state,payload){
 			state.flow_items[state.active_index].widgets[payload.widget_index].data.tasks.splice(payload.index,1);
+		},
+		/**
+		 * update name of a textfield widget.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		updateTextFieldName(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].data.name = payload.value;
+		},
+		updateFormFieldInstructions(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].data.instructions = payload.value;
+		},
+		updateFormFieldOptions(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].data.options = payload.value;
+		},
+		updateCheckboxMultipleOption(state,payload){
+			state.flow_items[state.active_index].widgets[payload.index].data.multiple = payload.value;
 		}
 	}
 });

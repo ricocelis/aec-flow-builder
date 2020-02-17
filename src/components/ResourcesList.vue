@@ -1,5 +1,5 @@
 <template>
-	<div class="resources-list">
+	<div class="resources-list tools-window">
 		<div class="links">
 			<a href="#" @click.prevent="setActive('users')" class="pull-left" :class="{active: active_tab == 'users'}">Users</a>
 			<a href="#" @click.prevent="setActive('groups')" class="pull-right" :class="{active: active_tab == 'groups'}">Groups</a>

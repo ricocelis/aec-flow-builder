@@ -13,8 +13,28 @@
 				</div>
 				<div class="divider"></div>
 				<!-- form -->
-				<div class="widget-icon" v-tooltip.top-center="`+ Form Fields`">
-					<i class="fas fa-clipboard-list"></i>
+				<div class="widget-icon">
+					<i class="fas fa-clipboard-list" v-tooltip.top-center="`+ Form Fields`" @click.prevent="toggleFormWidgets"></i>
+					<!-- form fields icons -->
+					<div class="form-widgets tools-window left" v-show="show_form_tools">
+						<div class="icons">
+							<div class="widget-icon" @click.prevent="addTextField" v-tooltip.top-center="`+ Text Field`">
+								<i class="far fa-square"></i>
+							</div>
+							<div class="h-divider"></div>
+							<div class="widget-icon" @click.prevent="addTextArea" v-tooltip.top-center="`+ Text Area`">
+								<i class="fas fa-paragraph"></i>
+							</div>
+							<div class="h-divider"></div>
+							<div class="widget-icon" @click.prevent="addSelect" v-tooltip.top-center="`+ DropDown`">
+								<i class="far fa-caret-square-down"></i>
+							</div>
+							<div class="h-divider"></div>
+							<div class="widget-icon" @click.prevent="addCheckbox" v-tooltip.top-center="`+ Checkbox`">
+								<i class="far fa-check-square"></i>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="divider"></div>
 				<!-- tasks -->
@@ -38,16 +58,25 @@
 	import TextEditor from '@/components/widgets/TextEditor.vue';
 	import FileUpload from '@/components/widgets/FileUpload.vue';
 	import SubTasks from '@/components/widgets/SubTasks.vue';
+	import TextField from '@/components/widgets/TextField.vue';
+	import TextArea from '@/components/widgets/TextArea.vue';
+	import SelectField from '@/components/widgets/SelectField.vue';
+	import CheckboxField from '@/components/widgets/CheckboxField.vue';
 	export default {
 		name: "task-widgets",
 		components: {
 			TextEditor,
 			FileUpload,
-			SubTasks
+			SubTasks,
+			TextField,
+			TextArea,
+			SelectField,
+			CheckboxField
 		},
 		data(){
 			return {
-
+				show_form_tools: false,
+				icon_hover_color: "#6f6f6f",
 			}
 		},
 		methods: {
@@ -59,6 +88,31 @@
 			},
 			addSubtasks(){
 				this.$store.commit('addSubtasksWidget');
+			},
+			addTextField(){
+				this.$store.commit('addTextFieldWidget');
+				this.show_form_tools = false;
+			},
+			addSelect(){
+				this.$store.commit('addSelectFieldWidget');
+				this.show_form_tools = false;
+			},
+			addCheckbox(){
+				this.$store.commit('addCheckboxWidget');
+				this.show_form_tools = false;
+			},
+			addTextArea(){
+				this.$store.commit('addTextAreaWidget');
+				this.show_form_tools = false;
+			},
+			toggleFormWidgets(){
+				this.show_form_tools = ! this.show_form_tools;
+			},
+			overIcon(){
+				this.icon_hover_color = "#DD9737";
+			},
+			leaveIcon(){
+				this.icon_hover_color = "#6f6f6f";
 			}
 		},
 		computed: {
