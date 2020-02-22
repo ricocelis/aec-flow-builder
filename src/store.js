@@ -266,6 +266,15 @@ export default new Vuex.Store({
 			state.flow_items[state.active_index].widgets[payload.widget_index].data.tasks.splice(payload.index,1);
 		},
 		/**
+		 * update the title of a subtask
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		updateSubtaskName(state,payload){
+			state.flow_items[state.active_index].widgets[payload.widget_index].data.tasks[payload.index].name = payload.value;
+		},
+		/**
 		 * update name of a textfield widget.
 		 * @param  {[type]} state   [description]
 		 * @param  {[type]} payload [description]

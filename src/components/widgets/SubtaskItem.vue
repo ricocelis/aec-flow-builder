@@ -113,7 +113,7 @@
 				get() { return this.$store.state.flow_items[this.active_index].widgets[this.widget_index].data.tasks[this.index].name },
 				set(value){ 
 					this.$store.commit('updateSubtaskName',{
-						widget_index: this.index,
+						widget_index: this.widget_index,
 						index: this.index,
 						value: value,
 					});
