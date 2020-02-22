@@ -7,6 +7,9 @@
 @import 'tooltip';
 
 .flow-builder{
+	.windows-container{
+		position: relative;
+	}
 	.vdp-datepicker{
 		.vdp-datepicker__calendar{
 			header{
@@ -90,7 +93,14 @@
 		color: @white;
 		font-weight: @wbold;
 		font-size: 15px;
-		padding: 10px 20px;
+		padding-left: 20px;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		.breadcrumb-divider{
+			margin : 0 5px 0 10px;
+			font-size: 30px;
+		}
 		input {
 			box-shadow: none;
 			border: 0;
@@ -100,13 +110,36 @@
 			.placeholder(darken(@white,10%));
 			font-size: 15px;
 			padding: 0 5px;
-			width: calc(100vw - 200px);
+			flex-grow: 1;
+		}
+		.tree-expander{
+			margin: 0 10px;
+			color: @orange;
+			font-size: 30px;
+			cursor: pointer;
+			transition: transform .25s ease-out;
+		}
+		.process-header{
+			display: flex;
+			align-items: center;
+			transition: width .5s ease-in-out;
+			width: calc(15% + 3px);
+			padding-left: 20px;
+			border-left: 1px solid @white;
+			box-shadow: -7px 0 9px -7px rgba(255,255,255,0.4);
+			height: 100%;
+			span{
+				flex-grow: 1;
+			}
+			.fa-edit {
+				margin: 0 10px;
+			}
 		}
 	}
 	.flow-windows{
 		display: flex;
 		.task-list{
-			width:40%;
+			width:35%;
 			height: calc(100vh - 110px);
 			position: relative;
 			border-right: 1px solid @gray;
@@ -247,8 +280,6 @@
 		}
 		.task-widgets {
 			width: 50%;
-			border-right: 1px solid @gray;
-			box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
 			display: flex;
 			.sidenav {
 				z-index: 1;
@@ -598,6 +629,173 @@
 				left:-18px; /* value = - border-left-width - border-right-width */
 				border-width: 9px 18px 9px 0;
 				border-color: transparent @white;
+			}
+		}
+	}
+
+	.process-tree {
+		background-color: @app-background;
+		z-index: 2000;
+		transition: width .5s ease-in-out;
+		width: 15%;
+		padding-left: 20px;
+		height: calc(100vh - 110px);
+		overflow: hidden;
+		position: absolute;
+		right: 0;
+		top: 0;
+		border-left: 1px solid @gray;
+		box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);
+		.tree-container{
+			width: 50vw;
+		}
+		.process-dropdown {
+			display: flex;
+			align-items: center;
+			padding: 15px 0;
+			border-bottom: 1px solid @black;
+			label {
+				font-size: 1.5em;
+				vertical-align: middle;
+				margin-right: 15px;
+			}
+		}
+		.search {
+			width: 200px;
+			position: relative;
+			.fas {
+				position: absolute;
+			    color: @blue;
+			    font-size: 16px;
+			    top: 12px;
+			    left: 8px;
+			}
+			.search-box {
+				border: 2px solid @blue;
+				padding: 10px 5px 10px 25px;
+			}
+		}
+		.process-list {
+			overflow: auto;
+			height: calc(100vh - 145px);
+			.process-row{
+				&.not-matched {
+					& > div > .process-info{
+						opacity: .5;
+					}
+					& > .process-info .fa-expand-arrows-alt {
+						opacity: 1;
+					}
+				}
+				.process-info {
+					padding: 10px;
+				    border-bottom: 1px solid @black;
+				    font-size: 20px;
+				    position: relative;
+					.expander {
+						width: 30px;
+						cursor: pointer;
+						display: inline-block;
+						.fas {
+							font-size: 25px;
+							transition: transform .25s ease-out;
+						}
+					}
+					&.expanded {
+						.expander {
+							.fas {
+								-webkit-transform: rotate(90deg);
+							    -moz-transform: rotate(90deg);
+							    -o-transform: rotate(90deg);
+							    -ms-transform: rotate(90deg);
+							    transform: rotate(90deg);
+							}
+						}
+					}
+					.fa-expand-arrows-alt {
+						position: absolute;
+						right: 20px;
+						top: 15px;
+						opacity: .5;
+					}
+					&:hover{
+						.fa-expand-arrows-alt{
+							opacity: 1;
+						}
+					}
+				}
+				.process-name {
+					font-weight: bold;
+				}
+				.children {
+					margin-left: 50px;
+				}
+			}
+		}
+		.gradient-overlay{
+			transition: right .5s ease-in-out;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			right: 0;
+			top: 0;
+			// gradient
+			background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 82%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+			background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 82%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+			background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 82%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+
+		}
+	}
+
+	.draggable-container{
+		position: absolute;
+	}
+
+	.draggable-item{
+		position: absolute;
+	    color: #FFF;
+	    padding: 5px 10px;
+	    border-radius: 10px;
+	    background-color: #003989;
+	    z-index: 10000;
+	    font-size: 12px;
+	    transform: translateX(-50%) translateY(-50%);
+	    cursor: pointer;
+	    white-space: nowrap;
+	}
+
+	&.ptree-expanded {
+		.flow-header {
+			.tree-expander {
+				-webkit-transform: rotate(180deg);
+			    -moz-transform: rotate(180deg);
+			    -o-transform: rotate(180deg);
+			    -ms-transform: rotate(180deg);
+			    transform: rotate(180deg);
+			}
+			.process-header {
+				width: calc(35% + 8px);
+			}
+		}
+		.process-tree {
+			width: 35%;
+			.gradient-overlay {
+				right: -100%;
+			}
+			.tree-container {
+				width: 100%;
+			}
+		}
+	}
+	&.ptree-edit {
+		.process-tree {
+			.process-list {
+				.process-row {
+					.process-info {
+						cursor: grab;
+					}
+				}
 			}
 		}
 	}

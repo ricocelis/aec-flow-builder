@@ -1,13 +1,14 @@
 <template>
 	<div class="process-row noselect" :class="matchedClass">
 		<Drag
+			:draggable="process_tree_mode == 'ptree-edit'"
 			:transfer-data="{ data: { type:'process' , data : this.row_data }}" >
 			<div class="process-info" :class="{expanded: show_children}">
 				<div class="expander"
 					v-if="hasChildren"
 					@click.prevent="toggleChildren"><i class="fas fa-caret-right blue"></i></div>
 				<span class="process-number">{{ this.row_data.ClientProcess.process_number }}</span> <span class="process-name"> {{ this.row_data.ClientProcess.name }}</span>
-				<i class="fas fa-expand-arrows-alt"></i>
+				<i class="fas fa-expand-arrows-alt" v-if="process_tree_mode == 'ptree-edit'"></i>
 			</div>
 			<div slot="image" class='draggable-container'>
 				<div class="draggable-item noselect" id="draggableProcess">{{ this.row_data.ClientProcess.name }}</div>
@@ -29,6 +30,7 @@
 	import SlideUpDown from 'vue-slide-up-down'
 	import ProcessRow from '@/components/ProcessRow.vue';
 	import {Drag} from 'vue-drag-drop';
+	import {mapState} from 'vuex';
 
 	export default {
 		name: 'process-row',
@@ -87,7 +89,10 @@
 			matchedClass(){
 				if(this.row_data.name_match == undefined) return "";
 				return (this.row_data.name_match || this.row_data.tag_match)? "matched" : "not-matched";
-			}
+			},
+			...mapState({
+				process_tree_mode : state => state.process_tree_mode
+			})
 		}
 	}
 </script>

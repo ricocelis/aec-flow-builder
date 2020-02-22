@@ -17,8 +17,25 @@ export default new Vuex.Store({
 			/* spreadsheets */
 			documents : ['xls','xlsx','doc','docx','pdf','txt','pptx','ppt']
 		},
+		/** PROCESS TREE STATE VARIABLES */
+		process_tree_mode: "ptree-minimized",
+		processes_list: [], // full response from processes request
+		filtered_processes: [],  // if user is searching these are the filtered results (used for display)
+		processes: [],
+		process_object: {}
 	},
 	mutations: {
+		/**
+		 * process data has been loaded and it needs to be saved to the store.
+		 * @param {[type]} state   [description]
+		 * @param {[type]} payload [description]
+		 */
+		setProcesses(state,payload){
+			state.processes_list = payload;
+			state.process_object = payload[0].ClientProcess;
+			state.processes = payload[0].children;
+			state.filtered_processes = payload[0].children;
+		},
 		/**
 		 * update flow name
 		 * @param {[type]} state   [description]
@@ -291,6 +308,25 @@ export default new Vuex.Store({
 		},
 		updateCheckboxMultipleOption(state,payload){
 			state.flow_items[state.active_index].widgets[payload.index].data.multiple = payload.value;
+		},
+		/** PROCESS TREE MUTATIONS */
+		/**
+		 * [setProcessIndex description]
+		 * @param {[type]} state   [description]
+		 * @param {[type]} payload [description]
+		 */
+		setProcessIndex(state,payload){
+			// save index
+			state.process_index = payload;
+			// extract process object from tree
+			state.process_object = state.processes_list[state.process_index].ClientProcess;
+			// list of all processes for the tree.
+			state.processes = state.processes_list[state.process_index].children;
+			// duplicate for filtered list.
+			state.filtered_processes = state.processes_list[state.process_index].children;
+		},
+		updateProcessTreeDisplay(state, payload){
+			state.process_tree_mode = payload;
 		}
 	}
 });
