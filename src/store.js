@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-//import _ from 'lodash';
+import _ from 'lodash';
 
 Vue.use(Vuex)
 
@@ -22,7 +22,8 @@ export default new Vuex.Store({
 		processes_list: [], // full response from processes request
 		filtered_processes: [],  // if user is searching these are the filtered results (used for display)
 		processes: [],
-		process_object: {}
+		process_object: {},
+		processes_backup: [] // when user clicks edit the tree create a backup so the can cancel.
 	},
 	mutations: {
 		/**
@@ -325,8 +326,66 @@ export default new Vuex.Store({
 			// duplicate for filtered list.
 			state.filtered_processes = state.processes_list[state.process_index].children;
 		},
+		/**
+		 * change the state of the process editing tree
+		 * if edit clone filter_processes to make a backup if user cancels instead of saves.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
 		updateProcessTreeDisplay(state, payload){
 			state.process_tree_mode = payload;
+			// editing?
+			if(payload == 'ptree-edit'){
+				state.processes_backup = _.cloneDeep(state.filtered_processes);
+			}
+		},
+		/**
+		 * set edit view to expanded
+		 * set filter processes back to backup one.
+		 * reset backup.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		cancelEditProcessTree(state,payload){
+			state.process_tree_mode = "ptree-expanded";
+			//state.filtered_processes = _.cloneDeep(state.processes_backup);
+			state.processes_backup = [];
+		},
+		/**
+		 * user dragged items and we need to update the row numbers.
+		 * @param {[type]} state [description]
+		 */
+		setNewProcessNumbers(state){
+			state.filtered_processes.forEach( row => {
+				let processNumber = row.ClientProcess.process_number;
+				if(row.children.length > 0){
+					row.children = renumberChildrenProcessNumbers(row.children,processNumber);
+				}
+			})
 		}
 	}
 });
+	
+/**
+ * use parent number to set correct child number
+ * @param  {[type]} children [description]
+ * @return {[type]}          [description]
+ */
+function renumberChildrenProcessNumbers(children,parent_number){
+	let counter = 1;
+	children.forEach( child => {
+		let newNumber = `${parent_number}.${counter}`;
+		// if the current one is different. (change).
+		if(child.ClientProcess.process_number != newNumber){
+			let parts = child.ClientProcess.process_number.split('.');
+			let current = parseInt(parts[parts.length - 1]);
+			// change the position in database.
+		}
+		child.ClientProcess.process_number = newNumber
+		counter ++;
+		if(child.children.length > 0) child.children = renumberChildrenProcessNumbers(child.children,newNumber);
+	});
+	return children;
+}

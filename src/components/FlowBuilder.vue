@@ -12,8 +12,8 @@
 			<div class="process-header">
 				<span>Process Documents</span>
 				<i class="fas fa-edit" v-show="process_tree_mode == 'ptree-expanded'" @click.prevent="editProcessTree"></i>
-				<a href="#" @click.prevent="saveProcessTree" class="flow-button">Save</a>
-				<a href="#" @click.prevent="cancelEditProcessTree" class="flow-button red">cancel</a>
+				<a href="#" @click.prevent="cancelEditProcessTree" class="flow-button">Done</a>
+				<!--a href="#" @click.prevent="cancelEditProcessTree" class="flow-button red">cancel</a-->
 			</div>
 		</div>
 		<div class="windows-container">
@@ -116,7 +116,7 @@
 			 * @return {[type]} [description]
 			 */
 			cancelEditProcessTree(){
-				this.$store.commit('updateProcessTreeDisplay', "ptree-minimized");
+				this.$store.commit('cancelEditProcessTree');
 			}
 		},
 		computed: {

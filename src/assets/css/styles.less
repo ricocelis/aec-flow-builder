@@ -734,6 +734,14 @@
 					margin-left: 50px;
 				}
 			}
+			& > .process-row {
+				&:nth-child(even){
+					background-color: @white;
+				}
+				&:nth-child(odd){
+					background-color: @app-background;
+				}
+			}
 		}
 		.gradient-overlay{
 			transition: right .5s ease-in-out;
