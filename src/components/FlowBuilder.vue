@@ -1,7 +1,8 @@
 <template>
 	<div class="flow-builder" :class="process_tree_mode">
 		<div class="flow-header">
-			PROCESS FLOW <i class="fas fa-angle-right breadcrumb-divider"></i> 
+			<span>PROCESS FLOW </span>
+			<i class="fas fa-angle-right breadcrumb-divider"></i>
 			<input
 				placeholder="Enter Flow Name"
 				v-model="flow_name"
@@ -10,7 +11,9 @@
 			<i class="fas fa-caret-left tree-expander" @click.prevent="toggleTreeDisplay"></i>
 			<div class="process-header">
 				<span>Process Documents</span>
-				<i class="fas fa-edit" v-show="process_tree_mode == 'ptree-expanded'"></i>
+				<i class="fas fa-edit" v-show="process_tree_mode == 'ptree-expanded'" @click.prevent="editProcessTree"></i>
+				<a href="#" @click.prevent="saveProcessTree" class="flow-button">Save</a>
+				<a href="#" @click.prevent="cancelEditProcessTree" class="flow-button red">cancel</a>
 			</div>
 		</div>
 		<div class="windows-container">
@@ -100,6 +103,20 @@
 			toggleTreeDisplay(){
 				const mode = (this.process_tree_mode == "ptree-minimized")?  "ptree-expanded" : "ptree-minimized";
 				this.$store.commit('updateProcessTreeDisplay',mode);
+			},
+			/**
+			 * edit process tree
+			 * @return {[type]} [description]
+			 */
+			editProcessTree(){
+				this.$store.commit('updateProcessTreeDisplay',"ptree-edit");
+			},
+			/**
+			 * set process tree back to mininized
+			 * @return {[type]} [description]
+			 */
+			cancelEditProcessTree(){
+				this.$store.commit('updateProcessTreeDisplay', "ptree-minimized");
 			}
 		},
 		computed: {

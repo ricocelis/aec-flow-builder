@@ -134,13 +134,16 @@
 			.fa-edit {
 				margin: 0 10px;
 			}
+			.flow-button {
+				display: none;
+			}
 		}
 	}
 	.flow-windows{
 		display: flex;
 		.task-list{
 			width:35%;
-			height: calc(100vh - 110px);
+			height: calc(100vh - 120px);
 			position: relative;
 			border-right: 1px solid @gray;
 			box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.4);
@@ -324,7 +327,7 @@
 			}
 			.widgets-list {
 				flex-grow: 1;
-				height: calc(100vh - 110px);
+				height: calc(100vh - 120px);
 				overflow: auto;
 				.flow-widget {
 					padding: 20px;
@@ -639,7 +642,7 @@
 		transition: width .5s ease-in-out;
 		width: 15%;
 		padding-left: 20px;
-		height: calc(100vh - 110px);
+		height: calc(100vh - 120px);
 		overflow: hidden;
 		position: absolute;
 		right: 0;
@@ -789,7 +792,29 @@
 		}
 	}
 	&.ptree-edit {
+		.flow-header {
+			padding-left: 0;
+			.tree-expander {
+				display: none;
+			}
+			& > span,
+			& > .breadcrumb-divider,
+			& > input {
+				display: none;
+			}
+			.process-header {
+				width: 100%;
+				border-left: 0;
+				box-shadow: none;
+				padding-right: 20px;
+				.flow-button {
+					margin-left: 20px;
+					display: inline-block;
+				}
+			}
+		}
 		.process-tree {
+			width: 100%;
 			.process-list {
 				.process-row {
 					.process-info {
@@ -797,6 +822,26 @@
 					}
 				}
 			}
+			.tree-container {
+				width: 100%;
+			}
+			.gradient-overlay {
+				right: -100%;
+			}
+		}
+	}
+
+	.flow-button {
+		display: inline-block;
+		padding: 5px 10px;
+		border-radius: 6px;
+		background-color: @green;
+		color: @white;
+		font-weight: @wbold;
+		text-transform: uppercase;
+		&.red {
+			line-height: inherit;
+			background-color: @red;
 		}
 	}
 }
