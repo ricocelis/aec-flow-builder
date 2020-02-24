@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
+		client_id: 0,
 		flow_name: "",
 		flow_items: [],
 		users: [],
@@ -26,6 +27,9 @@ export default new Vuex.Store({
 		processes_backup: [] // when user clicks edit the tree create a backup so the can cancel.
 	},
 	mutations: {
+		setClientId(state,payload){
+			state.client_id = payload;
+		},
 		/**
 		 * process data has been loaded and it needs to be saved to the store.
 		 * @param {[type]} state   [description]
@@ -405,6 +409,30 @@ export default new Vuex.Store({
 				}
 				index ++;
 			});
+		},
+		/**
+		 * add new tag to a process
+		 * @param {[type]} state   [description]
+		 * @param {[type]} payload [description]
+		 */
+		addSelectedTag(state,payload){
+			state.filtered_processes.forEach( row => {
+				if(row.ClientProcess.id == payload.process.ClientProcess.id){
+					row.ClientProcessTagLinkage.push({
+						client_id: state.client_id,
+						client_process_id: row.ClientProcess.id,
+						client_tag_id: payload.tag.ClientProcessTag.id,
+						color: payload.tag.ClientProcessTag.color,
+						id:"13",
+						tag:payload.tag.ClientProcessTag.tag,
+					});
+				}else{
+					// loop through children to see if node is there.
+					if(row.children.length > 0){
+						row.children = addTagToProcessChildren(row.children,payload);
+					}
+				}
+			});
 		}
 	}
 });
@@ -470,6 +498,28 @@ function deleteProcessInChildren(children, payload){
 			}
 		}
 		index ++;
+	});
+	return children;
+}
+
+
+function addTagToProcessChildren(children,payload){
+	children.forEach( row => {
+		if(row.ClientProcess.id == payload.process.ClientProcess.id){
+			row.ClientProcessTagLinkage.push({
+				client_id: row.ClientProcess.client_id,
+				client_process_id: row.ClientProcess.id,
+				client_tag_id: payload.tag.ClientProcessTag.id,
+				color: payload.tag.ClientProcessTag.color,
+				id:"13",
+				tag:payload.tag.ClientProcessTag.tag,
+			});
+		}else{
+			// loop through children to see if node is there.
+			if(row.children.length > 0){
+				row.children = addTagToProcessChildren(row.children,payload);
+			}
+		}
 	});
 	return children;
 }

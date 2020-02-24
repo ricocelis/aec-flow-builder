@@ -51,18 +51,18 @@
 		},
 		methods: {
 			loadViewData(){
-				const dataElement = document.getElementById("data_url");
-				const formDataUrl = dataElement.getAttribute('data_route');
-				const processesUrl = dataElement.getAttribute("processes_url");
+				const dataElement = document.getElementById("transfer_element");
+				this.$store.commit('setClientId',dataElement.getAttribute('client_id'));
+
 				//eslint-disable-next-line
 				axios.all([
 					//eslint-disable-next-line
-					axios.get(formDataUrl),
+					axios.get(`${process.env.VUE_APP_API_URL}client_processes/get_static/${this.client_id}`),
 					//eslint-disable-next-line
-					axios.get(processesUrl)
+					axios.get(`${process.env.VUE_APP_API_URL}client_flows/get_users_and_groups/${this.client_id}`),
 				])
 				//eslint-disable-next-line
-				.then(axios.spread((form_data_response, processes_response ) => {
+				.then(axios.spread((processes_response,form_data_response ) => {
 					this.handleLoadFormData(form_data_response.data);
 					this.handleLoadProcesses(processes_response.data);
 				}))
@@ -127,7 +127,8 @@
 				}
 			},
 			...mapState({
-				process_tree_mode : state => state.process_tree_mode
+				process_tree_mode : state => state.process_tree_mode,
+				client_id : state => state.client_id
 			})
 		},
 		watch: {

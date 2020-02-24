@@ -32,10 +32,10 @@
 							v-for="(row,index) in search_results"
 							:key="index"
 							@click.prevent="addSelectedTag(row)">
-							<div class="color light-blue">
+							<div :class="`color ${row.ClientProcessTag.color}`">
 								<div class="circle"></div>
 							</div>
-							<div class="tag-name">Employees</div>
+							<div class="tag-name">{{ row.ClientProcessTag.tag }}</div>
 						</div>
 					</div>
 					<div class="create-new-tag" v-show="!hasResults && term.length > 0">
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex';
 	export default {
 		name : 'process-tags',
 		props : {
@@ -99,10 +100,13 @@
 			 * @param {[type]} tag [description]
 			 */
 			addSelectedTag(tag){
-				this.$store.comit('addSelectedTag',{
+				this.$store.commit('addSelectedTag',{
 					process : this.process,
 					tag : tag
 				})
+				this.search_results = [];
+				this.term = "";
+				this.add_tags = false;
 			},
 			/**
 			 * check if the curent color is the same as the selected color
@@ -120,6 +124,17 @@
 			 */
 			selectColor(color){
 				this.selected_color = color;
+			},
+			searchTags(){
+				const encoded = encodeURI(this.term)
+				//eslint-disable-next-line
+				axios.get(`${process.env.VUE_APP_API_URL}client_processes/tag_autocomplete/${this.client_id}/term:${encoded}`)
+					.then(response => this.handleSearchTags(response.data))
+					//eslint-disable-next-line
+				    .catch(error => console.log(error));
+			},
+			handleSearchTags(response){
+				this.search_results = response;
 			}
 		},
 		computed : {
@@ -143,6 +158,18 @@
 			 */
 			hasResults(){
 				return this.search_results.length > 0;
+			},
+			...mapState({
+				client_id : state => state.client_id
+			})
+		},
+		watch : {
+			term(){ 
+				if(this.term.length == 0){
+					this.search_results = [];
+				}else{
+					this.searchTags();
+				}
 			}
 		}
 	}
