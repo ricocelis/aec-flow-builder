@@ -385,6 +385,26 @@ export default new Vuex.Store({
 					}
 				}
 			});
+		},
+		/**
+		 * user wants to delete a process.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		deleteProcess(state, payload){
+			let index = 0;
+			state.filtered_processes.forEach( row => {
+				if(row.ClientProcess.id == payload.ClientProcess.id){
+					state.filter_processes.splice(index,1);
+				}else{
+					// loop through children to see if node is there.
+					if(row.children.length > 0){
+						row.children = deleteProcessInChildren(row.children,payload);
+					}
+				}
+				index ++;
+			});
 		}
 	}
 });
@@ -428,6 +448,28 @@ function renameProcessInChildren(children,payload){
 				row.children = renameProcessInChildren(row.children,payload);
 			}
 		}
+	});
+	return children;
+}
+	
+/**
+ * loop through process children and delete if needed.
+ * @param  {[type]} children [description]
+ * @param  {[type]} payload  [description]
+ * @return {[type]}          [description]
+ */
+function deleteProcessInChildren(children, payload){
+	let index = 0;
+	children.forEach( row => {
+		if(row.ClientProcess.id == payload.ClientProcess.id){
+			children.splice(index,1);
+		}else{
+			// loop through children to see if node is there.
+			if(row.children.length > 0){
+				row.children = deleteProcessInChildren(row.children,payload);
+			}
+		}
+		index ++;
 	});
 	return children;
 }

@@ -30,7 +30,7 @@
 			<!-- drag icon -->
 			<div class="tools" v-if="process_tree_mode == 'ptree-edit'">
 				<i class="fas fa-plus add-section" v-tooltip.top-center="`Add Section`"></i>
-				<i class="fas fa-trash-alt delete-section" v-tooltip.top-center="`Delete Section`"></i>
+				<i class="fas fa-trash-alt delete-section" v-tooltip.top-center="`Delete Section`" @click.prevent="deleteRow"></i>
 				<i class="fas fa-sort sort-section"></i>
 			</div>
 		</div>
@@ -175,6 +175,13 @@
 			checkEnter(e){
 				const code = (e.keyCode ? e.keyCode : e.which);
 				if(code == 13) this.saveChanges();
+			},
+			deleteRow(){
+				const confirmation = confirm(`Are you want to delete ${this.row_data.ClientProcess.name} and all the subsections?`);
+				if(confirmation){
+					this.$store.commit('deleteProcess',this.row_data);
+					this.$store.commit('setNewProcessNumbers');
+				}
 			}
 		},
 		computed: {

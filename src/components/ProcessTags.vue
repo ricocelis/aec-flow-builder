@@ -3,7 +3,7 @@
 		<div class="flex-container">
 			<a href="#" v-tooltip.top-center="`Add Tags`" class="tooltip add-tag with-badge">
 				<i class="fas fa-tag" @click.prevent="toggleTagWindow"></i>
-				<span class="badge" v-if="!add_tags && hasTags" @click.prevent='viewSelectedTags'>{{ tagCount }}</span> 
+				<span class="badge" v-if="!add_tags && hasTags" @click.prevent='toggleTagWindow'>{{ tagCount }}</span> 
 			</a>
 			<div class="selected-tags" v-if="add_tags">
 				<div class="tag"
@@ -38,7 +38,7 @@
 							<div class="tag-name">Employees</div>
 						</div>
 					</div>
-					<div class="create-new-tag" v-show="!hasResults">
+					<div class="create-new-tag" v-show="!hasResults && term.length > 0">
 						<div class="colors">
 							<div
 								v-for="(color,index) in colors"
