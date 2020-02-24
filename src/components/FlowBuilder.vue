@@ -51,8 +51,8 @@
 		},
 		methods: {
 			loadViewData(){
-				const dataElement = document.getElementById("transfer_element");
-				this.$store.commit('setClientId',dataElement.getAttribute('client_id'));
+				//const dataElement = document.getElementById("transfer_element");
+				this.$store.commit('setClientId',process.env.VUE_APP_CLIENT_ID);
 
 				//eslint-disable-next-line
 				axios.all([

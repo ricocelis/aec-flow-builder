@@ -135,6 +135,17 @@
 			},
 			handleSearchTags(response){
 				this.search_results = response;
+			},
+			createNewTag(){
+				// temp
+				this.addSelectedTag({
+					ClientProcessTag : {
+						client_id: process.env.VUE_APP_CLIENT_ID,
+						color: this.selected_color,
+						id:"8",
+						tag: this.term,
+					}
+				})
 			}
 		},
 		computed : {
