@@ -348,7 +348,7 @@ export default new Vuex.Store({
 		 * @param  {[type]} payload [description]
 		 * @return {[type]}         [description]
 		 */
-		cancelEditProcessTree(state,payload){
+		cancelEditProcessTree(state){
 			state.process_tree_mode = "ptree-expanded";
 			//state.filtered_processes = _.cloneDeep(state.processes_backup);
 			state.processes_backup = [];
@@ -364,6 +364,27 @@ export default new Vuex.Store({
 					row.children = renumberChildrenProcessNumbers(row.children,processNumber);
 				}
 			})
+		},
+		/**
+		 * user changed the name of a process
+		 * loop through to find it in tree and update it.
+		 * @param  {[type]} state   [description]
+		 * @param  {[type]} payload [description]
+		 * @return {[type]}         [description]
+		 */
+		saveProcessName(state, payload){
+			// eslint-disable-next-line
+			state.filtered_processes.forEach( row => {
+				if(row.ClientProcess.id == payload.process.ClientProcess.id){
+					row.ClientProcess.name = payload.name;
+					if(payload.level === 0) row.ClientProcess.process_number = payload.process_number;
+				}else{
+					// loop through children to see if node is there.
+					if(row.children.length > 0){
+						row.children = renameProcessInChildren(row.children,payload);
+					}
+				}
+			});
 		}
 	}
 });
@@ -379,13 +400,34 @@ function renumberChildrenProcessNumbers(children,parent_number){
 		let newNumber = `${parent_number}.${counter}`;
 		// if the current one is different. (change).
 		if(child.ClientProcess.process_number != newNumber){
-			let parts = child.ClientProcess.process_number.split('.');
-			let current = parseInt(parts[parts.length - 1]);
+			//let parts = child.ClientProcess.process_number.split('.');
+			//let current = parseInt(parts[parts.length - 1]);
 			// change the position in database.
 		}
 		child.ClientProcess.process_number = newNumber
 		counter ++;
 		if(child.children.length > 0) child.children = renumberChildrenProcessNumbers(child.children,newNumber);
+	});
+	return children;
+}
+
+/**
+ * loop through process children and rename the one found.
+ * @param  {[type]} children [description]
+ * @param  {[type]} payload  [description]
+ * @return {[type]}          [description]
+ */
+function renameProcessInChildren(children,payload){
+	children.forEach( row => {
+		if(row.ClientProcess.id == payload.process.ClientProcess.id){
+			row.ClientProcess.name = payload.name;
+			if(payload.level === 0) row.ClientProcess.process_number = payload.process_number;
+		}else{
+			// loop through children to see if node is there.
+			if(row.children.length > 0){
+				row.children = renameProcessInChildren(row.children,payload);
+			}
+		}
 	});
 	return children;
 }

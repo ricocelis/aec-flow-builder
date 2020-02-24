@@ -695,6 +695,7 @@
 				    border-bottom: 1px solid @black;
 				    font-size: 20px;
 				    position: relative;
+				    display: flex;
 					.expander {
 						width: 30px;
 						cursor: pointer;
@@ -726,9 +727,44 @@
 							opacity: 1;
 						}
 					}
-				}
-				.process-name {
-					font-weight: bold;
+					.tools {
+						width: 150px;
+					    text-align: right;
+					    .far,
+					    .fas {
+					    	margin-right: 10px;
+					    	font-size: 20px;
+					    	cursor: pointer;
+					    }
+					    .add-section {
+					    	color : @blue;
+					    }
+					    .delete-section {
+					    	color : @red;
+					    }
+					}
+					.name {
+						flex-grow: 1;
+						.process-name {
+							font-weight: @wbold;
+							margin-right: 10px;
+						}
+						.far,
+					    .fas {
+					    	margin-right: 10px;
+					    	font-size: 20px;
+					    	cursor: pointer;
+					    }
+					    .edit-name {
+					    	input {
+					    		width: 40%;
+							    padding: 5px;
+							    vertical-align: middle;
+							    color: @black;
+							    margin-right: 10px;
+					    	}
+					    }
+					}
 				}
 				.children {
 					margin-left: 50px;
@@ -754,7 +790,7 @@
 			background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 82%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
 			background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 82%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
 			background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 82%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='@whitefff',GradientType=1 ); /* IE6-9 */
 
 		}
 	}
@@ -765,7 +801,7 @@
 
 	.draggable-item{
 		position: absolute;
-	    color: #FFF;
+	    color: @white;
 	    padding: 5px 10px;
 	    border-radius: 10px;
 	    background-color: #003989;
@@ -850,6 +886,242 @@
 		&.red {
 			line-height: inherit;
 			background-color: @red;
+		}
+	}
+
+	div.process-row {
+		.tag-manager {
+			display: inline-block;
+		    position: relative;
+			.flex-container {
+				display: flex;
+				.selected-tags {
+					flex-grow: 1;
+					margin-left: 10px;
+					.tag {
+						font-size: 12px;
+						font-weight: normal;
+						color: @white;
+						padding: 3px 5px;
+						border-radius: 10px;
+						display: inline-block;
+						margin-right: 5px;
+						&:last-child {
+							margin-right: 0;
+						}
+						a {
+							color: @white;
+							font-weight: bold;
+							margin-left: 5px;
+							font-size: 11px;
+						}
+					}
+					.tag.light-blue {
+						background-color: @tag-light-blue;
+					}
+					.tag.blue {
+						background-color: @tag-blue;
+					}
+					.tag.dark-blue {
+						background-color: @tag-dark-blue;
+					}
+					.tag.purple {
+						background-color: @tag-purple;
+					}
+					.tag.light-purple {
+						background-color: @tag-light-purple;
+					}
+					.tag.red {
+						background-color: @tag-red;
+					}
+					.tag.orange {
+						background-color: @tag-orange;
+					}
+					.tag.lime {
+						background-color: @tag-lime;
+					}
+					.tag.green {
+						background-color: @tag-green;
+					}
+					.tag.teal {
+						background-color: @tag-teal;
+					}
+				}
+			}
+			.tag-window {
+				position: absolute;
+				left: -113px;
+				top: 25px;
+				z-index: 300000;
+				color: @gray;
+				box-shadow: 5px 3px 10px rgba(0,0,0,.5);
+				.arrow-up {
+					position: absolute;
+					top: -12px;
+					left: 50%;
+					display: block;
+					transform: translateX(-50%);
+					background: url(../images/arrow-up.svg) no-repeat;
+				    width: 25px;
+				    height: 25px;
+				}
+				.uk-card {
+					text-align: center;
+					width: 260px;
+					border-radius: 10px;
+					overflow: hidden;
+					perspective: 1px;
+					box-shadow: 0 5px 15px rgba(0,0,0,.08);
+					transition: box-shadow .1s ease-in-out;
+					background-color: @white;
+					.field {
+						display: flex;
+						border-bottom: 1px solid #444;
+						padding: 20px 20px 0 20px;
+						margin-bottom: 20px;
+						.icon {
+							width: 30px;
+							color: #83CE7F;
+							.fas {
+								font-size: 16px;
+							}
+						}
+						.input {
+							flex-grow: 1;
+							input {
+								width: 100%;
+								border: 0;
+								box-shadow: none;
+								padding: 0;
+							}
+						}
+					}
+					.create-new-tag {
+						.colors {
+							display: flex;
+							flex-wrap: wrap;
+						}
+						.footer {
+							padding-bottom: 20px;
+							button:disabled {
+								opacity: .5;
+								&:hover {
+									background-color: @green;
+								}
+							}
+						}
+					}
+					.color {
+						width: 20%;
+						position: relative;
+						text-align: center;
+						margin-bottom: 15px;
+						.circle {
+							border-radius: 50%;
+							display: inline-block;
+							cursor: pointer;
+							width: 22px;
+							height: 22px;
+							position: relative;
+						}
+					}
+					.color.selected {
+						.circle {
+							&::before {
+								content: '';
+								width: 26px;
+								height: 26px;
+								position: absolute;
+								left: -3px;
+								top: -3px;
+								border: 1px solid #bbb;
+								border-radius: 50%;
+							}
+						}
+					}
+					.color.light-blue {
+						.circle {
+							background-color: @tag-light-blue;
+						}
+					}
+					.color.blue {
+						.circle {
+							background-color: @tag-blue;
+						}
+					}
+					.color.dark-blue {
+						.circle {
+							background-color: @tag-dark-blue;
+						}
+					}
+					.color.purple {
+						.circle {
+							background-color: @tag-purple;
+						}
+					}
+					.color.light-purple {
+						.circle {
+							background-color: @tag-light-purple;
+						}
+					}
+					.color.red {
+						.circle {
+							background-color: @tag-red;
+						}
+					}
+					.color.orange {
+						.circle {
+							background-color: @tag-orange;
+						}
+					}
+					.color.lime {
+						.circle {
+							background-color: @tag-lime;
+						}
+					}
+					.color.green {
+						.circle {
+							background-color: @tag-green;
+						}
+					}
+					.color.teal {
+						.circle {
+							background-color: @tag-teal;
+						}
+					}
+					.tag-results {
+						.tag-result {
+							border-bottom: 1px solid @light-gray;
+							padding: 10px 20px;
+							font-weight: normal;
+							font-size: 15px;
+							color: #444;
+							text-align: left;
+							display: flex;
+							&:hover {
+								background-color: @light-gray;
+								cursor: pointer;
+							}
+							.color {
+								width: 16px;
+								margin-bottom: 0;
+								margin-right: 15px;
+								.circle {
+									width: 16px;
+									height: 16px;
+								}
+							}
+						}
+					}
+				}
+			}
+			.tag-window.has-results {
+				.uk-card {
+					.field {
+						margin-bottom: 0px;
+					}
+				}
+			}
 		}
 	}
 }

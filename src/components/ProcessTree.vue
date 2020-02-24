@@ -19,6 +19,7 @@
 					v-for="(row,index) in processes"
 					:key="row.ClientProcess.id"
 					:index="index"
+					:level="0"
 					:row_data="row" />
 			</div>
 		</div>
