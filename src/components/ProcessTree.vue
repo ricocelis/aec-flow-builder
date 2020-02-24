@@ -14,7 +14,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="process-list">
+			<div class="process-list" id="processList">
 				<ProcessRow
 					v-for="(row,index) in processes"
 					:key="row.ClientProcess.id"

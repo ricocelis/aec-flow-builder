@@ -1,22 +1,24 @@
 <template>
-	<div class="process-row noselect" :class="matchedClass">
+	<div class="process-row noselect" :class="matchedClass" ref="processRow">
 		<div class="process-info" :class="{expanded: show_children}">
 			<div class="expander"
 				v-if="hasChildren"
 				@click.prevent="toggleChildren"><i class="fas fa-caret-right blue"></i></div>
 			<div class="name">
-				<span class="process-number" v-if="mode == 'view'">{{ this.row_data.ClientProcess.process_number }}</span>
-				<span class="process-name" v-if="mode == 'view'"> {{ this.row_data.ClientProcess.name }}</span>
+				<span class="process-number" v-if="mode == 'view'">{{ processNumber }}</span>
+				<span class="process-name" v-if="mode == 'view'"> {{ processName }}</span>
 				<!-- edit name -->
 				<a href="#"
 					v-tooltip.top-center="`Edit Section Name`"
 					@click.prevent="editProcessName" v-if="process_tree_mode == 'ptree-edit' && mode == 'view'"><i class="fas green fa-edit"></i></a>
 				<!-- process tags -->
-				<ProcessTags :process="row_data" v-if="process_tree_mode == 'ptree-edit' && mode == 'view'" />
+				<ProcessTags
+					:process="row_data"
+					v-if="process_tree_mode == 'ptree-edit' && mode == 'view' && !new_process" />
 				<!-- edit process name -->
 				<div class="edit-name" v-show="mode == 'edit'">
-					<input type="text" v-model="process_number" placeholder="Enter Process Number" v-if="level === 0"  @keyup="checkEnter">
-					<input type="text" v-model="process_name" placeholder="Enter Section Name" ref="procesNameInput"  @keyup="checkEnter">
+					<input type="text" v-model="process_number" placeholder="Enter Process Number" v-if="level === 0" ref="processNumberInput"  @keyup="checkEnter">
+					<input type="text" v-model="process_name" placeholder="Enter Section Name" ref="processNameInput"  @keyup="checkEnter">
 					<a href="#" v-tooltip.top-center="`Save Changes`" class="save-process-name"
 						@click.prevent="saveChanges">
 						<i class="fas green fa-check"></i>
@@ -29,7 +31,7 @@
 			</div>
 			<!-- drag icon -->
 			<div class="tools" v-if="process_tree_mode == 'ptree-edit'">
-				<i class="fas fa-plus add-section" v-tooltip.top-center="`Add Section`"></i>
+				<i class="fas fa-plus add-section" v-tooltip.top-center="`Add Section`" @click.prevent="addSection"></i>
 				<i class="fas fa-trash-alt delete-section" v-tooltip.top-center="`Delete Section`" @click.prevent="deleteRow"></i>
 				<i class="fas fa-sort sort-section"></i>
 			</div>
@@ -48,6 +50,12 @@
 							:level="level + 1"
 							:row_data="row" />
 				</Draggable>
+				<process-row
+					v-if="add_new"
+					:level="level + 1"
+					:parent_process="row_data.ClientProcess"
+					@cancel="cancelAddNewSection"
+					:new_process="true" />
 			</div>
 		</slide-up-down>
 	</div>	
@@ -59,6 +67,7 @@
 	import {mapState} from 'vuex';
 	import Draggable from 'vuedraggable';
 	import ProcessTags from '@/components/ProcessTags.vue';
+	import VueScrollTo from 'vue-scrollto';
 
 	export default {
 		name: 'process-row',
@@ -88,6 +97,14 @@
 			level : {
 				type : Number,
 				default : 0
+			},
+			new_process: {
+				type : Boolean,
+				default: false
+			},
+			parent_process : {
+				type : Object,
+				default : () => {}
 			}
 		},
 		data(){
@@ -95,14 +112,38 @@
 				show_children: true,
 				mode : "view",
 				process_name : "",
-				process_number : ""
+				process_number : "",
+				add_new :  false
 			}
 		},
 		mounted() {
-			this.process_name  = this.row_data.ClientProcess.name;
-			this.process_number = this.row_data.ClientProcess.process_number;
+			if(!this.new_process){
+				this.process_name  = this.row_data.ClientProcess.name;
+				this.process_number = this.row_data.ClientProcess.process_number;
+			}else{
+				this.setupNewProcess();
+			}
 		},
 		methods: {
+			setupNewProcess(){
+				this.mode = "edit";
+				VueScrollTo.scrollTo(this.$refs.processRow,500,{
+					container: "#processList",
+					easing: 'ease-in',
+					offset: -60,
+					force: true,
+				});
+				
+				setTimeout( () => {
+					// if level 0
+					if(this.level == 0){
+						// focus on process number
+						this.$refs.processNumberInput.focus();
+					}else{
+						this.$refs.processNameInput.focus();
+					}
+				},500);
+			},
 			/**
 			 * trigger on mouse down
 			 * duplicate row info for a draggable item
@@ -163,9 +204,16 @@
 			 * @return {[type]} [description]
 			 */
 			cancelSaveChanges(){
-				this.mode = "view";
-				this.process_name  = this.row_data.ClientProcess.name;
-				this.process_number = this.row_data.ClientProcess.process_number;
+				if(this.new_process){
+					// let parent know to cancel adding new section
+					this.process_number = "";
+					this.process_name = "";
+					this.$emit('cancel');
+				}else{
+					this.mode = "view";
+					this.process_name  = this.row_data.ClientProcess.name;
+					this.process_number = this.row_data.ClientProcess.process_number;
+				}
 			},
 			/**
 			 * if user clicked enter key.
@@ -182,14 +230,34 @@
 					this.$store.commit('deleteProcess',this.row_data);
 					this.$store.commit('setNewProcessNumbers');
 				}
+			},
+			/**
+			 * add new section to the children
+			 */
+			addSection(){
+				this.add_new = true;
+			},
+			cancelAddNewSection(){
+				this.add_new = false;
 			}
 		},
 		computed: {
+			processNumber(){
+				if(this.row_data == undefined) return "";
+				return this.row_data.ClientProcess.process_number;
+			},
+			processName(){
+				if(this.row_data == undefined) return "";
+				return this.row_data.ClientProcess.name;
+			},
 			hasChildren(){
+				if(this.row_data == undefined) return false;
 				return (this.row_data.children.length > 0);
 			},
 			// check if it has a search result match
 			matchedClass(){
+				if(this.row_data == undefined) return "";
+
 				if(this.row_data.name_match == undefined) return "";
 				return (this.row_data.name_match || this.row_data.tag_match)? "matched" : "not-matched";
 			},
