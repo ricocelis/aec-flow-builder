@@ -1,8 +1,8 @@
 <template>
 	<div class="tag-manager">
 		<div class="flex-container">
-			<a href="#" v-tooltip.top-center="`Add Tags`" class="tooltip add-tag with-badge">
-				<i class="fas fa-tag" @click.prevent="toggleTagWindow"></i>
+			<a href="#" class="tooltip add-tag with-badge">
+				<i class="fas fa-tag" @click.prevent="toggleTagWindow"  v-tooltip.top-center="`Add Tags`"></i>
 				<span class="badge" v-if="!add_tags && hasTags" @click.prevent='toggleTagWindow'>{{ tagCount }}</span> 
 			</a>
 			<div class="selected-tags" v-if="add_tags">

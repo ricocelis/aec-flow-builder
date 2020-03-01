@@ -1,6 +1,6 @@
 <template>
 	<div class="flow-widget form-field textarea"  :class="altClass">
-		<div class="edit">
+		<div class="edit-view">
 			<input type="text" v-model="field_name" placeholder="Enter Field Label" class="label" ref="label">
 			<textarea :disabled="true" :placeholder="placeholder" class="field" rows="3"></textarea>
 			<input type="text" v-model="instructions" class="instructions" placeholder="Enter Field Instructions. Leave blank if not needed" />

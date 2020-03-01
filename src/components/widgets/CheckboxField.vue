@@ -1,6 +1,6 @@
 <template>
 	<div class="flow-widget form-field checkbox"  :class="altClass">
-		<div class="edit">
+		<div class="edit-edit">
 			<div class="field">
 				<input type="text" v-model="field_name" placeholder="Enter Field Label" class="label" ref="label">
 				<div class="checkboxes">
@@ -41,7 +41,7 @@
 	import {mapState} from 'vuex';
 	export default {
 
-		name : "textarea-widget",
+		name : "checkbox-widget",
 		components: {
 
 		},

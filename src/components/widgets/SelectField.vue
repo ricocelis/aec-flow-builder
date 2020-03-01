@@ -1,6 +1,6 @@
 <template>
 	<div class="flow-widget form-field select"  :class="altClass">
-		<div class="edit">
+		<div class="edit-view">
 			<div class="field">
 				<input type="text" v-model="field_name" placeholder="Enter Field Label" class="label" ref="label">
 				<select>
@@ -32,7 +32,7 @@
 	import {mapState} from 'vuex';
 	export default {
 
-		name : "textarea-widget",
+		name : "select-widget",
 		components: {
 
 		},

@@ -31,13 +31,66 @@
 			</div>
 			<!-- drag icon -->
 			<div class="tools" v-if="process_tree_mode == 'ptree-edit'">
-				<i class="fas fa-plus add-section" v-tooltip.top-center="`Add Section`" @click.prevent="addSection"></i>
+				<div class="add-content">
+					<i class="fas fa-plus add-section" v-tooltip.top-center="`Add Content/Section`" @click.prevent="toggleAddOptions"></i>
+					<div class="add-content-options tools-window right" v-show="add_options">
+						<div class="icons">
+							<div class="widget-icon" v-tooltip.top-center="`+ New Section`" @click.prevent="addSection">
+								<i class="fas fa-stream"></i>
+							</div>
+							<div class="divider"></div>
+							<div class="widget-icon" v-tooltip.top-center="`+ Text Editor`" @click.prevent="addTextEditor">
+								<i class="fas fa-font"></i>
+							</div>
+							<div class="divider"></div>
+							<!-- file upload -->
+							<div class="widget-icon" v-tooltip.top-center="`+ File Upload`"  @click.prevent="addUpload">
+								<i class="fas fa-file-alt"></i>
+							</div>
+							<div class="divider"></div>
+							<!-- form -->
+							<small style="margin-right: 10px;">form:</small>
+							<!-- textfield -->
+							<div class="widget-icon" @click.prevent="addTextField" v-tooltip.top-center="`+ Text Field`">
+								<i class="far fa-square"></i>
+							</div>
+							<div class="divider"></div>
+							<!-- textarea -->
+							<div class="widget-icon" @click.prevent="addTextArea" v-tooltip.top-center="`+ Text Area`">
+								<i class="fas fa-paragraph"></i>
+							</div>
+							<div class="divider"></div>
+							<!-- dropdown -->
+							<div class="widget-icon" @click.prevent="addSelect" v-tooltip.top-center="`+ DropDown`">
+								<i class="far fa-caret-square-down"></i>
+							</div>
+							<div class="divider"></div>
+							<!-- checkbox -->
+							<div class="widget-icon" @click.prevent="addCheckbox" v-tooltip.top-center="`+ Checkbox`">
+								<i class="far fa-check-square"></i>
+							</div>
+							<div class="divider"></div>
+							<!-- date picker -->
+							<div class="widget-icon" @click.prevent="addDatePicker" v-tooltip.top-center="`+ Date Picker`">
+								<i class="far fa-calendar-alt"></i>
+							</div>
+						</div>
+					</div>
+				</div>
 				<i class="fas fa-trash-alt delete-section" v-tooltip.top-center="`Delete Section`" @click.prevent="deleteRow"></i>
 				<i class="fas fa-sort sort-section"></i>
 			</div>
 		</div>
 		<slide-up-down :active="show_children">
-			<div class="children" v-if="hasChildren">
+			<div class="content">
+				<component
+					v-for="(data,index) in local_content"
+					:is="handleContentTypeComponent(data)"
+					:key="index"
+					:index="index"
+					:row_data="data" />
+			</div>
+			<div class="children" v-if="hasChildren || add_new">
 				<Draggable
 					:options="{disabled : process_tree_mode != 'ptree-edit'}"
 					v-model="row_data.children"
@@ -48,7 +101,9 @@
 							:key="row.ClientProcess.id"
 							:index="index"
 							:level="level + 1"
-							:row_data="row" />
+							:row_data="row"
+							@delete="deleteContentRow"
+							@input="onContentUpdate" />
 				</Draggable>
 				<process-row
 					v-if="add_new"
@@ -68,6 +123,13 @@
 	import Draggable from 'vuedraggable';
 	import ProcessTags from '@/components/ProcessTags.vue';
 	import VueScrollTo from 'vue-scrollto';
+	import ProcessTextEditor from '@/components/widgets/ProcessTextEditor.vue';
+	import ProcessFileUpload from '@/components/widgets/ProcessFileUpload.vue';
+	// form fields
+	import ProcessTextField from '@/components/widgets/ProcessTextField.vue';
+	import ProcessTextArea from '@/components/widgets/ProcessTextArea.vue';
+
+	import _ from 'lodash';
 
 	export default {
 		name: 'process-row',
@@ -75,7 +137,11 @@
 			'process-row' : ProcessRow,
 			'slide-up-down' : SlideUpDown,
 			Draggable,
-			ProcessTags
+			ProcessTags,
+			ProcessTextEditor,
+			ProcessFileUpload,
+			ProcessTextField,
+			ProcessTextArea
 		},
 		props: {
 			row_data: {
@@ -105,7 +171,7 @@
 			parent_process : {
 				type : Object,
 				default : () => {}
-			}
+			},
 		},
 		data(){
 			return {
@@ -113,7 +179,9 @@
 				mode : "view",
 				process_name : "",
 				process_number : "",
-				add_new :  false
+				add_new :  false,
+				add_options : false,
+				local_content: []
 			}
 		},
 		mounted() {
@@ -123,6 +191,7 @@
 			}else{
 				this.setupNewProcess();
 			}
+			if(this.row_data != undefined) this.local_content = _.cloneDeep(this.row_data.ClientProcessContent);
 		},
 		methods: {
 			setupNewProcess(){
@@ -236,10 +305,122 @@
 			 */
 			addSection(){
 				this.add_new = true;
+				this.toggleAddOptions();
 			},
 			cancelAddNewSection(){
 				this.add_new = false;
-			}
+			},
+			/**
+			 * show/hide window to add content or sections
+			 * @return {[type]} [description]
+			 */
+			toggleAddOptions(){
+				this.add_options = ! this.add_options;
+			},
+			/**
+			 * add text editor widget
+			 */
+			addTextEditor(){
+				this.local_content.push({
+					content_type: "text",
+					content : ""
+				});
+				this.toggleAddOptions();
+			},
+			/**
+			 * add upload widget
+			 */
+			addUpload(){
+				this.local_content.push({
+					content_type: "file",
+					filename : "",
+					original_filename : "",
+					file_extension : "",
+					file_size : 0
+				});
+				this.toggleAddOptions();
+			},
+			/**
+			 * add form widget
+			 */
+			addForm(){
+				this.toggleAddOptions();
+			},
+			/**
+			 * determine component type based data.type
+			 * @param  {[type]} data [description]
+			 * @return {[type]}      [description]
+			 */
+			handleContentTypeComponent(data){
+				let component = null;
+				switch(data.content_type){
+					case "text":
+						component = "ProcessTextEditor";
+					break;
+					case "file":
+						component = "ProcessFileUpload";
+					break;
+					case "textfield":
+						component = "ProcessTextField";
+					break;
+					case "textarea":
+						component = "ProcessTextArea";
+					break;
+				}
+				return component;
+			},
+			/**
+			 * confirm that user wants to delete this content
+			 * @param  {[type]} index [description]
+			 * @return {[type]}      [description]
+			 */
+			deleteContentRow(index){
+				this.local_content.split(index,1);
+			},
+			/**
+			 * content on widget component changed.
+			 * @param  {[type]} data [description]
+			 * @return {[type]}      [description]
+			 */
+			onContentUpdate(data){
+				this.local_content[data.index] = data.data;
+			},
+			/**
+			 * add text field widget to content list
+			 */
+			addTextField(){
+				this.local_content.push({
+					content_type: "textfield",
+					field_name : "",
+					field_instructions : ""
+				});
+				this.toggleAddOptions();
+				this.show_form_tools = false;
+			},
+			addSelect(){
+				this.$store.commit('addSelectFieldWidget');
+				this.show_form_tools = false;
+			},
+			addCheckbox(){
+				this.$store.commit('addCheckboxWidget');
+				this.show_form_tools = false;
+			},
+			addDatePicker(){
+				this.$store.commit('addDatePickerWidget');
+				this.show_form_tools = false;
+			},
+			/**
+			 * add text area widget to content list
+			 */
+			addTextArea(){
+				this.local_content.push({
+					content_type: "textarea",
+					field_name : "",
+					field_instructions : ""
+				});
+				this.toggleAddOptions();
+				this.show_form_tools = false;
+			},
 		},
 		computed: {
 			processNumber(){
@@ -264,6 +445,15 @@
 			...mapState({
 				process_tree_mode : state => state.process_tree_mode
 			})
+		},
+		watch : {
+			/**
+			 * copy content locally if row_data changes.
+			 * @return {[type]} [description]
+			 */
+			row_data() {
+				this.local_content = _.cloneDeep(this.row_data.ClientProcessContent);
+			}
 		}
 	}
 </script>

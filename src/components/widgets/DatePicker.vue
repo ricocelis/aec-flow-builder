@@ -1,6 +1,6 @@
 <template>
 	<div class="flow-widget form-field textfield"  :class="altClass">
-		<div class="edit">
+		<div class="edit-view">
 			<input type="text" v-model="field_name" placeholder="Enter Field Label" class="label" ref="label">
 			<DatePicker placeholder="Choose Date"></DatePicker>
 			<input type="text" v-model="instructions" class="instructions" placeholder="Enter Field Instructions. Leave blank if not needed" />
